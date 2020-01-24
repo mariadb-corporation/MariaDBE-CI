@@ -34,6 +34,7 @@ while [ ${#} -gt 0 ]; do
             ;;
         --git-branch)
             GIT_BRANCH=${2#*/}
+            GIT_BRANCH=${GIT_BRANCH//+/p}
             shift 2
             ;;
         --git-reset)
