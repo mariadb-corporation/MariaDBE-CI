@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
+import sys
+from optparse import OptionParser
+from pathlib import Path
+
+# Exit codes
+ESUCCESS = 0
+ENOPACKAGE = 1
+ENOGPGKEY = 2
+EWRONGFILE = 3
+HOMEDIR = str(Path.home())
+RPMMACROS = HOMEDIR + '/.rpmmacros'
+
+parser = OptionParser()
+parser.add_option("-p", "--package", dest="package", help="Package to sign")
+parser.add_option("-n", "--gpgname", dest="gpgname", help="Sign Name to use")
+(options, args) = parser.parse_args()
+
+if options.package is None:
+    print("ERR: No package to sign, please specify with -p|--package")
+    sys.exit(ENOPACKAGE)
+
+if options.gpgname is None:
+    print("ERR: No gpg name to sign with, please specify with -k|--gpgkey")
+    sys.exit(ENOGPGKEY)
+
+def write_config():
+    if not Path(RPMMACROS).is_file():
+        cf = open(RPMMACROS, 'w')
+        cf.write('%_signature gpg\n')
+        cf.write(f'%_gpg_path {HOMEDIR}/.gnupg\n')
+        cf.write(f'%_gpg_name {options.gpgname}\n')
+        cf.write('%_gpgbin /usr/bin/gpg2\n')
+        cf.close() 
+
+def sign_package(pkg, gpgname):
+    import pexpect
+    signcmd = None
+    print(f'Trying to sign package {pkg} with GPG name {gpgname}...')
+    if pkg.endswith('.deb'):
+        pass
+    elif pkg.endswith('.rpm'):
+        signcmd = "rpm --addsign " + pkg
+        write_config()
+    else:
+        print(f'ERR: Package {pkg} is not an RPM/DEB file!')
+        sys.exit(EWRONGFILE)
+
+
+# finally
+sign_package(pkg=options.package, gpgname=options.gpgname)
