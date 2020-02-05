@@ -1,0 +1,12 @@
+%echo Generating a new OpenPGP signkey
+Key-Type: RSA
+Key-Length: 4096
+Subkey-Type: RSA
+Subkey-Length: 4096
+Subkey-Usage: encrypt, sign, auth
+Name-Real: MariaDB Platform QA
+Name-Email: platform-qa@mariadb.com
+Expire-Date: 0
+Passphrase: @@PASSPHRASE@@
+%commit
+%echo done
