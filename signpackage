@@ -1,0 +1,88 @@
+#!/usr/bin/env python3.6
+# coding=utf-8
+
+import os
+import sys
+from optparse import OptionParser
+from pathlib import Path
+
+# Exit codes
+ESUCCESS = 0
+ENOPACKAGE = 1
+ENOGPGKEY = 2
+EWRONGFILE = 3
+ESIGNERR = 4
+EENVERROR = 5
+
+# Internal global vars
+HOMEDIR = str(Path.home())
+RPMMACROS = HOMEDIR + '/.rpmmacros'
+GPGPATH = HOMEDIR + '/.gnupg'
+GPGNAME = 'MariaDB Platform QA'
+GPGKEY = '9A7E3856'
+GPG_PASSWORD = os.getenv('GPG_PASSWORD')
+
+if sys.stdout.isatty():
+    GPG_TTY = os.ttyname(sys.stdout.fileno())
+    os.environ['GPG_TTY'] = GPG_TTY
+else:
+    print('E: The output device isn\'t like a teletype!')
+    sys.exit(EENVERROR)
+
+parser = OptionParser()
+parser.add_option("--package", dest="package", help="Package to sign")
+parser.add_option("--gpgname", dest="gpgname", help="GPG name to sign with")
+parser.add_option("--gpgkey", dest="gpgkey", help="GPG key to sign with")
+parser.add_option("--gpgpass", dest="gpgpass", help="Password for GPG key")
+(options, args) = parser.parse_args()
+
+
+if options.package is None:
+    print("E: No package to sign, please specify with --package")
+    sys.exit(ENOPACKAGE)
+
+if not Path(options.package).is_file():
+    print("E: Specified package doesn't exist")
+    sys.exit(ENOPACKAGE)
+
+if options.gpgname is not None:
+    print(f'I: Setting GPG name to {options.gpgname}')
+    GPGNAME = options.gpgname
+
+if options.gpgkey is not None:
+    print(f'I: Setting GPG key to {options.gpgkey}')
+    GPGKEY = options.gpgkey
+
+if options.gpgpass is not None:
+    print('I: Setting GPG password to {0!s} ;)' % ('*' * len(options.gpgpass)))
+    GPG_PASSWORD = options.gpgpass
+
+
+def sign_my_package(sign_command):
+    import pexpect
+    print(f"I: Executing {sign_command}")
+    signer = pexpect.spawn('/bin/bash', ['-c', sign_command])
+    signer.logfile_read = sys.stdout.buffer
+    patterns = ['Enter .*phrase: ', pexpect.EOF]
+    signer.expect(patterns)
+    signer.sendline(GPG_PASSWORD)
+    signer.expect(pexpect.EOF)
+
+
+def sign_package(pkg):
+    signcmd = None
+    print(f'I: Trying to sign package {pkg} with GPG name \"{GPGNAME}\"...')
+    if pkg.endswith('.deb'):
+        signcmd = "debsigs --sign=origin -k " + \
+            GPGKEY + ' ' + os.path.abspath(pkg)
+    elif pkg.endswith('.rpm'):
+        signcmd = "rpm --addsign " + os.path.abspath(pkg)
+    else:
+        print(f'E: Package {pkg} is not an RPM nor DEB file!')
+        sys.exit(EWRONGFILE)
+
+    sign_my_package(signcmd)
+
+
+# finally
+sign_package(pkg=options.package)

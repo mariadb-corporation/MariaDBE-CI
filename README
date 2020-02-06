@@ -1,0 +1,20 @@
+Preparation:
+
+* use ubuntu 20.04 (unstable atm)
+* install gnupg2, pinentry-tty, python3-pexpect, rpm, dpkg-sign
+* make sure you have full shell access with all variables set like ${HOME} and so on
+* optionally execute `update-alternatives --config pinentry` and set it to pinentry-tty
+* optionally install python3-pip to upgrade modules
+* makefile requires PASSPHRASE env variable set
+* execute `make prepare` to install config files.
+* execute `make gpgkey` to generate new key if needed.
+* set GPG_PASSWORD env variable (from Jenkins or manually)
+
+* Use ubuntu 16.04 (works atm)
+* install gnupg2, pinentry-tty, python3.6, python3.6-pip, rpm, debsigs
+* install pexpect with pip3.6
+* execute `make prepare` to install config files.
+* execute `make gpgkey` to generate new key if needed.
+* set GPG_PASSWORD env variable (from Jenkins or manually)
+
+* execute `signpackage --package <your package>`
