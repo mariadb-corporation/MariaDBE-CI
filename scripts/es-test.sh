@@ -127,7 +127,7 @@ if [[ ${PACKAGE} = Galera ]]; then
     sudo zypper -n in galera-enterprise-4 rsync socat lsof
   fi
 #
-  WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera_smm.so')
+  WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera*smm.so')
   [[ -n "${WSREP_PROVIDER}" ]] && export WSREP_PROVIDER
 fi
 #
