@@ -141,19 +141,18 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make cmake yum-utils libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel
+         ncurses-devel bison zlib-devel libevent-devel
     sudo yum-builddep -y mariadb-server
 fi
 
 if [[ ${packager_type} == "zypper" ]]
 then
-    install_libdir=/usr/lib64
     # We need zypper here
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel
+         ncurses-devel bison zlib-devel libevent-devel
     sudo zypper -n source-install -d mariadb
 fi
 
