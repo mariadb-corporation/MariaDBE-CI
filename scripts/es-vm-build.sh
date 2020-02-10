@@ -108,6 +108,22 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        build-dep mariadb-server
+  cat /etc/*release | grep -E "Trusty|wheezy"
+  if [ $? == 0 ]
+  then
+     sudo apt-get install -y --force-yes libgnutls-dev libgcrypt11-dev
+  else
+     sudo apt-get install -y --force-yes libgnutls30 libgnutls-dev
+     if [ $? != 0 ]
+     then
+         sudo apt-get install -y --force-yes libgnutls28-dev
+     fi
+     sudo apt-get install -y --force-yes libgcrypt20-dev
+     if [ $? != 0 ]
+     then
+         sudo apt-get install -y --force-yes libgcrypt11-dev
+     fi
+  fi
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -122,7 +138,8 @@ then
         enable_power_tools="--enablerepo=PowerTools"
     fi
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
-         gcc gcc-c++ make cmake yum-utils libaio-devel
+         gcc gcc-c++ make cmake yum-utils libaio-devel \
+         openssl gnutls-devel libgcrypt-devel pam-devel
     sudo yum-builddep -y mariadb-server
 fi
 
@@ -132,7 +149,8 @@ then
     # We need zypper here
     sudo zypper -n refresh
     sudo zypper -n update
-    sudo zypper -n install gcc gcc-c++ make cmake libaio-devel
+    sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
+         gnutls-devel libgcrypt-devel pam-devel
     sudo zypper -n source-install -d mariadb
 fi
 
