@@ -109,6 +109,10 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
+       install dh-systemd
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
        build-dep mariadb-server
   cat /etc/*release | grep -E "Trusty|wheezy"
   if [ $? == 0 ]

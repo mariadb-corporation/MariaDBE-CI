@@ -75,12 +75,12 @@ done
 # here we are going to create unprivileged mysql user if doesn't exist
 if [[ ! $(getent passwd ${MYSQL_USER} > /dev/null 2>&1) ]]; then
   case ${PLATFORM} in
-    centos-* | rhel-* | sles-* )
+    centos* | rhel* | sles* | suse* )
       sudo groupadd -r ${MYSQL_GROUP} 2> /dev/null || true
       sudo useradd -M -r --home ${MYSQL_DATADIR} --shell /sbin/nologin \
         --comment "MySQL server" --gid ${MYSQL_GROUP} ${MYSQL_USER} 2> /dev/null || true
       ;;
-    debian-* | ubuntu-* )
+    debian* | ubuntu* )
       sudo addgroup --system ${MYSQL_GROUP} > /dev/null 2>&1
       sudo adduser --system --disabled-login --ingroup ${MYSQL_GROUP} --no-create-home \
     --home /nonexistent --gecos "MySQL Server" --shell /bin/false ${MYSQL_USER} > /dev/null 2>&1
