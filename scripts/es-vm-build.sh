@@ -103,7 +103,7 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       install git build-essential cmake make libaio-dev
+       install git build-essential cmake make libaio-dev libssl-dev
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
@@ -139,7 +139,7 @@ then
     fi
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make cmake yum-utils libaio-devel \
-         openssl gnutls-devel libgcrypt-devel pam-devel
+         openssl-devel gnutls-devel libgcrypt-devel pam-devel
     sudo yum-builddep -y mariadb-server
 fi
 
@@ -150,7 +150,7 @@ then
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
-         gnutls-devel libgcrypt-devel pam-devel
+         openssl-devel gnutls-devel libgcrypt-devel pam-devel
     sudo zypper -n source-install -d mariadb
 fi
 
