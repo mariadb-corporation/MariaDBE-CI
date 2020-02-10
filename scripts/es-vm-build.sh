@@ -131,5 +131,4 @@ then
 fi
 
 
-${CODETREE}/scripts/${SCRIPT} ${SCRIPT_ARGS:-}"
-exit ${DOCKER_RETCODE}
+${CODETREE}/scripts/${SCRIPT} ${SCRIPT_ARGS:-}
