@@ -104,7 +104,7 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install git build-essential cmake make libaio-dev libssl-dev \
-       libncurses5-dev
+       libncurses5-dev devscripts
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
