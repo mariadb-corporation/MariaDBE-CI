@@ -1,7 +1,13 @@
-# Requires PASSPHRASE to be set
+# Requires env PASSPHRASE to be set
+ifeq ($(PASSPHRASE),)
+$(error PASSPHRASE is not set)
+endif
+
 .PHONY: prepare gpgkey uninstall install
 .DEFAULT_GOAL := prepare
 exec_prefix := /usr/local
+ORIGIN := 'MariaDB Platform QA'
+
 
 prepare:
 	install -m 644 rpmmacros $(HOME)/.rpmmacros
@@ -13,17 +19,16 @@ uninstall:
 	rm -f $(HOME)/.rpmmacros
 	rm -f $(HOME)/.gnupg/gpg-agent.conf
 	rm -f $(exec_prefix)/bin/signpackage
+	rm -f $(exec_prefix)/bin/apt-repository
 
 install: prepare
 	install -m 755 signpackage $(exec_prefix)/bin
+	install -m 755 apt-repository $(exec_prefix)/bin
 
 gpgkey:
-ifeq ($(PASSPHRASE),)
-$(error PASSPHRASE is not set)
-endif
 	@sed -e "s:@@PASSPHRASE@@:$(PASSPHRASE):g" < gpg-key-params > gpg-key-params.work
 	gpg --verbose --batch --gen-key gpg-key-params.work
 	rm -f gpg-key-params.work
 	gpg --list-keys --keyid-format LONG
-	gpg --export -a 'MariaDB Platform QA' > RPM-GPG-KEY-platform-qa
-
+	gpg --export -a $(ORIGIN) > RPM-GPG-KEY-platform-qa
+	gpg --export $(ORIGIN)    > deb-key-platform-qa.gpg

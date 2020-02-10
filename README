@@ -10,7 +10,7 @@ Preparation:
 * execute `make gpgkey` to generate new key if needed.
 * set GPG_PASSWORD env variable (from Jenkins or manually)
 
-* Use ubuntu 16.04 (works atm)
+* Use ubuntu 16.04 (works atm, script adjusted for platform)
 * install gnupg2, pinentry-tty, python3.6, python3.6-pip, rpm, debsigs, rng-tools
 * install pexpect with pip3.6
 * execute `make prepare` to install config files.
@@ -23,10 +23,13 @@ Preparation:
 
 KEYGRIP way
 + batch processing without dealing with stdin/stdout
-+ works everywhere
++ works everywhere with gpg2
 
 * run `gpg2 --list-keys --keyid-format LONG` to find the key hash
 * run `gpg2 --with-keygrip -K <KEY HASH>` to find KEYGRIP
 * execute `/usr/lib/gnupg2/gpg-preset-passphrase --preset --passphrase <password> <KEYGRIP>`
-* execute `rpm --addsign <rpm>` or `debsign -K <hash> <debfile>`
+* execute `rpm --addsign <rpm>` or `debsigs -k <hash> --sign=origin <debfile>`
 * you will not be asked for password and package will be signed
+
+! please note that deb file may contain multiple signs - origin, builder, archive, etc
+! please note that gpg1 does not known about keygrips
