@@ -101,6 +101,7 @@ if [[ ${EXT} = deb ]]; then
   cd ${TOPDIR}
   [[ ${PLATFORM} = "debian-8" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
   debian/autobake-deb.sh
+  RES=$?
   mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
 else
   if [[ ${FETCH_COMPAT} = yes ]]; then
@@ -128,5 +129,7 @@ else
 #
   cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
   make -j${NCPU} ${PKGARG} VERBOSE=1
+  RES=$?
   mv -vf ${BUILDDIR}/*.${EXT} ${TARGET}/
 fi
+exit $RES
