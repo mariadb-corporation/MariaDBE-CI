@@ -104,7 +104,8 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install git build-essential cmake make libaio-dev libssl-dev \
-       libncurses5-dev devscripts
+       libncurses5-dev devscripts \
+       libcurl3-dev libnuma-dev libsnappy-dev libzstd-dev uuid-dev
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
@@ -141,7 +142,7 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make cmake yum-utils libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel
+         ncurses-devel bison zlib-devel libevent-devel rpmbuild
     sudo yum-builddep -y mariadb-server
 fi
 
@@ -152,7 +153,7 @@ then
     sudo zypper -n update
     sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel
+         ncurses-devel bison zlib-devel libevent-devel rpmbuild
     sudo zypper -n source-install -d mariadb
 fi
 
