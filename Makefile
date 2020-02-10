@@ -4,17 +4,17 @@
 exec_prefix := /usr/local
 
 prepare:
-	install rpmmacros $(HOME)/.rpmmacros
+	install -m 644 rpmmacros $(HOME)/.rpmmacros
 	install -d -m 700 $(HOME)/.gnupg
 	install -m 600 gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf
-	killall -9 gpg-agent ||:
+	gpg-connect-agent reloadagent /bye ||:
 
 uninstall:
 	rm -f $(HOME)/.rpmmacros
 	rm -f $(HOME)/.gnupg/gpg-agent.conf
-	rm -f $(exec_prefix)/bin
+	rm -f $(exec_prefix)/bin/signpackage
 
-install:
+install: prepare
 	install -m 755 signpackage $(exec_prefix)/bin
 
 gpgkey:
