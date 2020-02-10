@@ -103,11 +103,11 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       install git build-essential cmake make
+       install git build-essential cmake make libaio-dev
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       apt-get build-dep mariadb-server
+       build-dep mariadb-server
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -122,7 +122,7 @@ then
         enable_power_tools="--enablerepo=PowerTools"
     fi
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
-         gcc gcc-c++ make cmake yum-utils
+         gcc gcc-c++ make cmake yum-utils libaio-devel
     sudo yum-builddep -y mariadb-server
 fi
 
@@ -132,7 +132,7 @@ then
     # We need zypper here
     sudo zypper -n refresh
     sudo zypper -n update
-    sudo zypper -n install gcc gcc-c++ make cmake 
+    sudo zypper -n install gcc gcc-c++ make cmake libaio-devel
     sudo zypper -n source-install -d mariadb
 fi
 
