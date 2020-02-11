@@ -191,25 +191,34 @@ fi
 #
 if [[ ${PACKAGE} = Galera ]]; then
   # Galera installation
+  export GALERA_PACKAGE="galera-enterprise-4"
+  export GALERA_PACKAGE_DEB="galera-enterprise-4"
+  export GALERA_REPO="repo4"
+  minor_version=`cat $(dirname ${0})/VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
+  if [[ "${minor_version}" == "2" || "${minor_version}" == "3" ]]; then
+    export GALERA_PACKAGE="galera"
+    export GALERA_PACKAGE_DEB="galera-3"
+    export GALERA_REPO="repo3"
+  fi 
   if [[ -e /usr/bin/apt-get ]]; then
     sudo apt update
     sudo apt install -y dirmngr lsb-release
     DEBIAN_VERSION=$(lsb_release -sc)
-    sudo bash -c "echo deb http://downloads.mariadb.com/galera-test/repo4/deb ${DEBIAN_VERSION} main > /etc/apt/sources.list.d/galera.list"
+    sudo bash -c "echo deb http://downloads.mariadb.com/galera-test/${GALERA_REPO}/deb ${DEBIAN_VERSION} main > /etc/apt/sources.list.d/galera.list"
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xCE1A3DD5E3C94F49
     sudo apt update
-    DEBIAN_FRONTEND=noninteractive sudo apt install -y galera-enterprise-4 rsync netcat socat
+    DEBIAN_FRONTEND=noninteractive sudo apt install -y ${GALERA_PACKAGE_DEB} rsync netcat socat
   fi
 
   if [[ -e /usr/bin/yum ]]; then
     sudo sh -c "echo '[galera]' > /etc/yum.repos.d/galera.repo"
     sudo sh -c "echo 'name=galera' >> /etc/yum.repos.d/galera.repo"
-    sudo sh -c "echo 'baseurl=http://downloads.mariadb.com/galera-test/repo4/rpm/rhel/\$releasever/\$basearch/' >> /etc/yum.repos.d/galera.repo"
+    sudo sh -c "echo 'baseurl=http://downloads.mariadb.com/galera-test/${GALERA_REPO}/rpm/rhel/\$releasever/\$basearch/' >> /etc/yum.repos.d/galera.repo"
     sudo sh -c "echo 'gpgkey=https://downloads.mariadb.com/MariaDB/RPM-GPG-KEY-MariaDB-Ent' >> /etc/yum.repos.d/galera.repo"
     sudo sh -c "echo 'gpgcheck=1' >> /etc/yum.repos.d/galera.repo"
     sudo cat /etc/yum.repos.d/galera.repo
     sudo yum -y clean all
-    sudo yum install -y galera-enterprise-4 rsync socat lsof
+    sudo yum install -y ${GALERA_PACKAGE} rsync socat lsof
   fi
 
   if [[ -e /usr/bin/zypper ]]; then
@@ -219,9 +228,9 @@ if [[ ${PACKAGE} = Galera ]]; then
     wget https://downloads.mariadb.com/MariaDB/RPM-GPG-KEY-MariaDB-Ent -O /tmp/rpm.key
     sudo rpm --import /tmp/rpm.key && rm -f /tmp/rpm.key
     sudo zypper rr Galera-Enterprise || true
-    sudo zypper ar -f -g http://downloads.mariadb.com/galera-test/repo4/rpm/sles/${RELEASE}/x86_64/ Galera-Enterprise
+    sudo zypper ar -f -g http://downloads.mariadb.com/galera-test/${GALERA_REPO}/rpm/sles/${RELEASE}/x86_64/ Galera-Enterprise
     sudo zypper refresh
-    sudo zypper -n in galera-enterprise-4 rsync socat lsof
+    sudo zypper -n in ${GALERA_PACKAGE} rsync socat lsof
   fi
 #
   export WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera*smm.so')
