@@ -236,7 +236,7 @@ if [[ ${PACKAGE} = Galera ]]; then
   export WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera*smm.so')
   export WSREP_EXPORT="export WSREP_PROVIDER=${WSREP_PROVIDER}; "
 #  [[ -n "${WSREP_PROVIDER}" ]] && export WSREP_PROVIDER
-else
+#else
    # remove all disabled.def if it is not galera run
   # sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 fi
