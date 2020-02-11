@@ -229,7 +229,7 @@ if [[ ${PACKAGE} = Galera ]]; then
 #  [[ -n "${WSREP_PROVIDER}" ]] && export WSREP_PROVIDER
 else
    # remove all disabled.def if it is not galera run
-   sudo find . -type f -name "disabled.def" -exec rm -f {} \;
+  # sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 fi
 #
 # Run MTR with parameters
