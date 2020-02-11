@@ -68,6 +68,94 @@ while [[ ${#} -gt 0 ]]; do
       ;;
   esac
 done
+
+unset packager_type
+
+if [[ ${distro_id} =~ "suse" ]]
+then
+   packager_type="zypper"
+fi
+
+if [[ ${distro_id} =~ "rhel" ]]
+then
+   packager_type="yum"
+fi
+
+if [[ ${distro_id} =~ "debian" ]]
+then
+   packager_type="apt"
+fi
+
+if [[ ${packager_type} == "" ]]
+then
+    command -v apt-get
+
+    if [ $? == 0 ]
+    then
+        packager_type="apt"
+    fi
+
+    command -v yum
+
+    if [ $? == 0 ]
+    then
+        packager_type="yum"
+    fi
+
+    command -v zypper
+
+    if [ $? == 0 ]
+    then
+        packager_type="zypper"
+    fi
+fi
+
+if [[ ${packager_type} == "" ]]
+then
+    echo "Can not determine package manager type, exiting"
+    exit 1
+fi
+
+if [[ ${packager_type} == "apt" ]]
+then
+  # DEB-based distro
+  export DEBIAN_FRONTEND=noninteractive
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libaio-dev libxml2-dev \
+       perl-modules 
+fi
+
+if [[ ${packager_type} == "yum" ]]
+then
+    # YUM!
+    sudo yum clean all
+    sudo yum update -y
+    unset enable_power_tools
+    yum repolist all | grep PowerTools
+    if [ $? == 0 ]
+    then
+        enable_power_tools="--enablerepo=PowerTools"
+    fi
+    sudo yum install -y --nogpgcheck ${enable_power_tools} \
+         libaio-devel libxml2-devel perl-Data-Dumper \
+         perl-XML-LibXML
+fi
+
+if [[ ${packager_type} == "zypper" ]]
+then
+    # We need zypper here
+    sudo zypper -n refresh
+    sudo zypper -n update
+    sudo zypper -n install \
+         libaio-devel libxml2-devel perl-Data-Dumper \
+         perl-XML-LibXML
+fi
+
+
+
+
 #
 # here we are going to install Galera library
 
@@ -132,10 +220,10 @@ if [[ ${PACKAGE} = Galera ]]; then
 fi
 #
 # Run MTR with parameters
-cd $(dirname ${0})/../mysql-test/
-find . -type f -name "disabled.def" -exec rm -f {} \;
+sudo cd $(dirname ${0})/../mysql-test/
+sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 RUNDIR=$(pwd)
-chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
+sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
 sudo su - ${MYSQL_USER} -s /bin/bash -c "cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
 MTR_RETCODE=${?}
 [[ ${MTR_RETCODE} -ne 0 ]] && tar czf ${TARNAME}.tar.gz ${MYSQL_VARDIR}
