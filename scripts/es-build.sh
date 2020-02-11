@@ -83,7 +83,7 @@ if [[ ${OS} = Linux ]]; then
 fi
 #
 case ${PLATFORM} in
-  centos-6|rhel-6)
+  centos_6*|rhel_6*)
     CMAKE_ARGS+=" -DCMAKE_C_COMPILER=/opt/rh/devtoolset-3/root/usr/bin/gcc"
     CMAKE_ARGS+=" -DCMAKE_CXX_COMPILER=/opt/rh/devtoolset-3/root/usr/bin/g++"
     ;;

@@ -151,6 +151,7 @@ then
     sudo yum install -y --nogpgcheck rpmbuild
     sudo yum install -y --nogpgcheck rpmdevtools
     sudo yum-builddep -y mariadb-server
+    sudo yum install -y --nogpgcheck devtoolset-3-gcc-c++   devtoolset-3-valgrind-devel devtoolset-3-libasan-devel   clang
 fi
 
 if [[ ${packager_type} == "zypper" ]]
