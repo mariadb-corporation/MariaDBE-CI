@@ -124,7 +124,7 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install libaio-dev libxml2-dev \
-       perl-modules 
+       perl-modules libmhash-dev libxml-simple-perl
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -138,9 +138,14 @@ then
     then
         enable_power_tools="--enablerepo=PowerTools"
     fi
+    sudo yum -y insrall yum-utils
+    sudo yum -y groupinstall 'Development Tools'
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          libaio-devel libxml2-devel perl-Data-Dumper \
-         perl-XML-LibXML
+         perl-XML-LibXML curl-devel mhash-devel libxml2-devel gnutls-devel perl-XML-Simple \
+         scons boost-devel check-devel which systemd-devel \
+         cracklib-devel Judy-devel rsync socat lsof patch   valgrind-devel \
+         snappy-devel expect jemalloc net-tools
 fi
 
 if [[ ${packager_type} == "zypper" ]]
@@ -150,7 +155,10 @@ then
     sudo zypper -n update
     sudo zypper -n install \
          libaio-devel libxml2-devel perl-Data-Dumper \
-         perl-XML-LibXML
+         perl-XML-LibXML pam-devel perl-XML-Simple \
+         libaio-devel pam-devel perl-XML-Simple \
+         ncurses-devel libcurl-devel \
+         rsync socat lsof tar gzip bzip2 rpm-build
 fi
 
 
@@ -220,7 +228,7 @@ if [[ ${PACKAGE} = Galera ]]; then
 fi
 #
 # Run MTR with parameters
-sudo cd $(dirname ${0})/../mysql-test/
+cd $(dirname ${0})/../mysql-test/
 sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 RUNDIR=$(pwd)
 sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
