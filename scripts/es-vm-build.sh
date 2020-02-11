@@ -167,5 +167,6 @@ then
     sudo zypper -n source-install -d mariadb
 fi
 
+export PLATFORM=${Image}
 
 ${CODETREE}/scripts/${SCRIPT} ${SCRIPT_ARGS:-}
