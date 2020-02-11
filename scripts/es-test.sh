@@ -232,6 +232,7 @@ cd $(dirname ${0})/../mysql-test/
 sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 RUNDIR=$(pwd)
 sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
+sudo chmod a+rx .
 sudo su - ${MYSQL_USER} -s /bin/bash -c "export WSREP_PROVIDER=${WSREP_PROVIDER}; cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
 MTR_RETCODE=${?}
 [[ ${MTR_RETCODE} -ne 0 ]] && tar czf ${TARNAME}.tar.gz ${MYSQL_VARDIR}
