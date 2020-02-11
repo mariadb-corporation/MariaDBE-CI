@@ -11,6 +11,7 @@ PLATFORM=${IMAGE:-NO-DEFAULT-HERE}
 MTR_DEFAULT_ARGS="--max-save-core=0 --max-save-datadir=1 --force --retry=3 --parallel=auto --vardir=${MYSQL_VARDIR}"
 MTR_RUN_ARGS=${MTR_DEFAULT_ARGS}
 PACKAGE=MariaDB-ES
+unset WSREP_EXPORT
 #
 # specific ARGS for different TESTS
 MTR_BIG_TEST_ARGS=" --max-test-fail=20 --big-test"
@@ -224,6 +225,7 @@ if [[ ${PACKAGE} = Galera ]]; then
   fi
 #
   export WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera*smm.so')
+  export WSREP_EXPORT="export WSREP_PROVIDER=${WSREP_PROVIDER}; "
 #  [[ -n "${WSREP_PROVIDER}" ]] && export WSREP_PROVIDER
 else
    # remove all disabled.def if it is not galera run
@@ -236,7 +238,7 @@ cd $(dirname ${0})/../mysql-test/
 RUNDIR=$(pwd)
 sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
 sudo chmod a+rx .
-sudo su - ${MYSQL_USER} -s /bin/bash -c "export WSREP_PROVIDER=${WSREP_PROVIDER}; cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
+sudo su - ${MYSQL_USER} -s /bin/bash -c "${WSREP_EXPORT} cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
 MTR_RETCODE=${?}
 [[ ${MTR_RETCODE} -ne 0 ]] && tar czf ${TARNAME}.tar.gz ${MYSQL_VARDIR}
 sudo mv -vf /tmp/${PACKAGE}_*.xml ${TARNAME}.tar.gz ${RUNDIR}/../ ||:
