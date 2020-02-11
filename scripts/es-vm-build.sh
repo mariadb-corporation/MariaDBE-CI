@@ -147,6 +147,9 @@ then
          gcc gcc-c++ make cmake yum-utils libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
          ncurses-devel bison zlib-devel libevent-devel rpmbuild
+    sudo yum install -y --nogpgcheck rpm-build
+    sudo yum install -y --nogpgcheck rpmbuild
+    sudo yum install -y --nogpgcheck rpmdevtools
     sudo yum-builddep -y mariadb-server
 fi
 
@@ -157,7 +160,9 @@ then
     sudo zypper -n update
     sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel rpmbuild
+         ncurses-devel bison zlib-devel libevent-devel
+    sudo zypper -n install rpmbuild
+    sudo zypper -n install rpm-build
     sudo zypper -n source-install -d mariadb
 fi
 
