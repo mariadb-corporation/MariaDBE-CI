@@ -225,11 +225,14 @@ if [[ ${PACKAGE} = Galera ]]; then
 #
   export WSREP_PROVIDER=$(sudo find /usr -type f -name 'libgalera*smm.so')
 #  [[ -n "${WSREP_PROVIDER}" ]] && export WSREP_PROVIDER
+else
+   # remove all disabled.def if it is not galera run
+   sudo find . -type f -name "disabled.def" -exec rm -f {} \;
 fi
 #
 # Run MTR with parameters
 cd $(dirname ${0})/../mysql-test/
-sudo find . -type f -name "disabled.def" -exec rm -f {} \;
+
 RUNDIR=$(pwd)
 sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
 sudo chmod a+rx .
