@@ -125,7 +125,7 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install libaio-dev libxml2-dev \
-       perl-modules libmhash-dev libxml-simple-perl
+       perl-modules libmhash-dev libxml-simple-perl patch
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -159,7 +159,7 @@ then
          perl-XML-LibXML pam-devel perl-XML-Simple \
          libaio-devel pam-devel perl-XML-Simple \
          ncurses-devel libcurl-devel \
-         rsync socat lsof tar gzip bzip2 rpm-build
+         rsync socat lsof tar gzip bzip2 rpm-build patch
 fi
 
 
