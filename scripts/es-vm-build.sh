@@ -146,7 +146,7 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make cmake yum-utils libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel rpmbuild
+         ncurses-devel bison zlib-devel libevent-devel
     sudo yum install -y --nogpgcheck rpm-build
     sudo yum install -y --nogpgcheck rpmbuild
     sudo yum install -y --nogpgcheck rpmdevtools
