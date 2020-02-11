@@ -7,6 +7,7 @@ MYSQL_GROUP=mysql
 MYSQL_VARDIR=/var/tmp/mtr
 MYSQL_DATADIR=/var/lib/mysql
 PLATFORM=${IMAGE:-NO-DEFAULT-HERE}
+PLATFORM=`echo $PLATFORM | sed "s/_/-/g" | sed "s/-gcp//" | sed "s/-aws//"`
 #
 MTR_DEFAULT_ARGS="--max-save-core=0 --max-save-datadir=1 --force --retry=3 --parallel=auto --vardir=${MYSQL_VARDIR}"
 MTR_RUN_ARGS=${MTR_DEFAULT_ARGS}

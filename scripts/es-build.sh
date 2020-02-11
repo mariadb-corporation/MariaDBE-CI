@@ -12,6 +12,7 @@ OS=$(uname -s)
 NCPU=
 PKGARG=package
 PLATFORM=${IMAGE:-ubuntu-2004}
+PLATFORM=`echo $PLATFORM | sed "s/_/-/g" | sed "s/-gcp//" | sed "s/-aws//"`
 GIT_BRANCH=
 GIT_CLEAN=no
 TOPDIR="${PWD}/.."
@@ -83,7 +84,7 @@ if [[ ${OS} = Linux ]]; then
 fi
 #
 case ${PLATFORM} in
-  centos_6*|rhel_6*)
+  centos-6|rhel-6)
     CMAKE_ARGS+=" -DCMAKE_C_COMPILER=/opt/rh/devtoolset-3/root/usr/bin/gcc"
     CMAKE_ARGS+=" -DCMAKE_CXX_COMPILER=/opt/rh/devtoolset-3/root/usr/bin/g++"
     ;;
