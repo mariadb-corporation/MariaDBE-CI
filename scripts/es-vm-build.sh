@@ -139,6 +139,14 @@ then
        -y --force-yes \
        install dh-apparmor libjemalloc-dev libkrb5-dev \
        libreadline-gplv2-dev libsystemd-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libbison-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install chrpath
 
   cat /etc/*release | grep -E "Trusty|wheezy"
   if [ $? == 0 ]
