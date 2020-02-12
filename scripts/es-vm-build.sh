@@ -172,16 +172,23 @@ then
     sudo yum -y insrall yum-utils
     sudo yum -y groupinstall 'Development Tools'
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
+         gcc gcc-c++ make cmake yum-utils libaio-devel \
+         openssl-devel gnutls-devel libgcrypt-devel pam-devel \
+         ncurses-devel bison zlib-devel libevent-devel
+    sudo yum install -y --nogpgcheck ${enable_power_tools} rpm-build
+    sudo yum install -y --nogpgcheck ${enable_power_tools} rpmbuild
+    sudo yum install -y --nogpgcheck ${enable_power_tools} rpmdevtools
+    sudo yum install -y --nogpgcheck ${enable_power_tools} \
          libaio-devel libxml2-devel perl-Data-Dumper \
          perl-XML-LibXML curl-devel libxml2-devel gnutls-devel perl-XML-Simple \
          boost-devel check-devel which systemd-devel \
          cracklib-devel rsync socat lsof patch valgrind-devel \
          snappy-devel expect net-tools
     sudo yum install -y --nogpgcheck ${enable_power_tools} mhash-devel
-    sudo yum install -y --nogpgcheck ${enable_power_tools} scons 
-    sudo yum install -y --nogpgcheck ${enable_power_tools} Judy-devel 
+    sudo yum install -y --nogpgcheck ${enable_power_tools} scons
+    sudo yum install -y --nogpgcheck ${enable_power_tools} Judy-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} jemalloc
-    sudo yum install -y --nogpgcheck devtoolset-3-gcc-c++   devtoolset-3-valgrind-devel devtoolset-3-libasan-devel   clang
+    sudo yum install -y --nogpgcheck devtoolset-3-gcc-c++ devtoolset-3-valgrind-devel devtoolset-3-libasan-devel clang
 fi
 
 if [[ ${packager_type} == "zypper" ]]
