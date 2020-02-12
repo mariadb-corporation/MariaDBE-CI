@@ -109,11 +109,28 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       install dh-systemd
+       install dh-systemd libaio-dev  \
+       perl-modules libmhash-dev libxml-simple-perl patch \
+       apt-utils build-essential python-dev sudo git \
+       devscripts equivs libcurl4-openssl-dev \
+       ccache python3 python3-pip curl libssl-dev \
+       libzstd-dev libevent-dev dpatch gawk gdb \
+       libboost-dev libcrack2-dev libjudy-dev libnuma-dev \
+       libsnappy-dev libxml2-dev unixodbc-dev uuid-dev \
+       fakeroot iputils-ping \
+       libmhash-dev libxml-simple-perl \
+       gnutls-dev libaio-dev libpam-dev \
+       scons libboost-program-options-dev \
+       libboost-system-dev libboost-filesystem-dev check \
+       socat lsof valgrind apt-transport-https \
+       software-properties-common dirmngr rsync netcat \
+       libboost-all-dev libsnappy-dev flex expect \
+       net-tools  
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        build-dep mariadb-server
+
   cat /etc/*release | grep -E "Trusty|wheezy"
   if [ $? == 0 ]
   then

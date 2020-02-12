@@ -125,8 +125,23 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       install libaio-dev libxml2-dev \
-       perl-modules libmhash-dev libxml-simple-perl patch
+       install libaio-dev  \
+       perl-modules libmhash-dev libxml-simple-perl patch \
+       apt-utils build-essential python-dev sudo git \
+       devscripts equivs libcurl4-openssl-dev \
+       ccache python3 python3-pip curl libssl-dev \
+       libzstd-dev libevent-dev dpatch gawk gdb \
+       libboost-dev libcrack2-dev libjudy-dev libnuma-dev \
+       libsnappy-dev libxml2-dev unixodbc-dev uuid-dev \
+       fakeroot iputils-ping \
+       libmhash-dev libxml-simple-perl \
+       gnutls-dev libaio-dev libpam-dev \
+       scons libboost-program-options-dev \
+       libboost-system-dev libboost-filesystem-dev check \
+       socat lsof valgrind apt-transport-https \
+       software-properties-common dirmngr rsync netcat \
+       libboost-all-dev libsnappy-dev flex expect \
+       net-tools  
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -146,7 +161,7 @@ then
          libaio-devel libxml2-devel perl-Data-Dumper \
          perl-XML-LibXML curl-devel mhash-devel libxml2-devel gnutls-devel perl-XML-Simple \
          scons boost-devel check-devel which systemd-devel \
-         cracklib-devel Judy-devel rsync socat lsof patch   valgrind-devel \
+         cracklib-devel Judy-devel rsync socat lsof patch valgrind-devel \
          snappy-devel expect jemalloc net-tools
 fi
 
@@ -156,11 +171,14 @@ then
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install \
-         libaio-devel libxml2-devel perl-Data-Dumper \
-         perl-XML-LibXML pam-devel perl-XML-Simple \
-         libaio-devel pam-devel perl-XML-Simple \
-         ncurses-devel libcurl-devel \
-         rsync socat lsof tar gzip bzip2 rpm-build patch
+        gcc-c++ libaio-devel pam-devel perl-XML-Simple \
+        libgnutls-devel bison openssl-devel systemd-devel \
+        ncurses-devel libxml2-devel libcurl-devel \
+        rsync socat lsof tar gzip bzip2 rpm-build \
+        checkpolicy policycoreutils curl perl check-devel \
+        valgrind-devel wget sudo git scons boost-devel \
+        snappy-devel expect net-tools flex autoconf automake libtool \
+        perl-Data-Dumper perl-XML-LibXML patch
 fi
 
 
@@ -248,6 +266,11 @@ cd $(dirname ${0})/../mysql-test/
 RUNDIR=$(pwd)
 sudo chown -R ${MYSQL_USER}:${MYSQL_GROUP} ${RUNDIR}
 sudo chmod a+rx .
+sudo chmod a+rx /home -R
+sudo mkdir -p ${MYSQL_VARDIR}
+sudo mkdir -p ${MYSQL_DATADIR}
+sudo chown ${MYSQL_USER}:${MYSQL_GROUP} ${MYSQL_VARDIR}
+sudo chown ${MYSQL_USER}:${MYSQL_GROUP} ${MYSQL_DATADIR}
 sudo su - ${MYSQL_USER} -s /bin/bash -c "${WSREP_EXPORT} cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
 MTR_RETCODE=${?}
 [[ ${MTR_RETCODE} -ne 0 ]] && tar czf ${TARNAME}.tar.gz ${MYSQL_VARDIR}
