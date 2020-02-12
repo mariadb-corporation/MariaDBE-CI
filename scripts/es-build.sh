@@ -100,7 +100,7 @@ cd ${BUILDDIR}
 if [[ ${EXT} = deb ]]; then
   cd ${TOPDIR}
   [[ ${PLATFORM} = "debian-jessie" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
-  sudo debian/autobake-deb.sh
+  debian/autobake-deb.sh
   RES=$?
   mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
 else

@@ -225,6 +225,23 @@ then
     sudo zypper -n source-install -d mariadb
 fi
 
+# cmake
+wget -q https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Linux-x86_64.tar.gz --no-check-certificate
+sudo tar xzf cmake-3.16.4-Linux-x86_64.tar.gz -C /usr/ --strip-components=1
+
+cmake_version=`cmake --version | grep "cmake version" | awk '{ print $3 }'`
+if [ "`echo -e "3.16.4\n$cmake_version"|sort -V|head -n 1`" != "3.16.4" ] ; then
+    echo "cmake does not work! Trying to build from source"
+    wget -q https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4.tar.gz --no-check-certificate
+    tar xzf cmake-3.16.4.tar.gz
+    cd cmake-3.16.4
+
+    ./bootstrap
+    gmake
+    sudo make install
+    cd ..
+fi
+
 export PLATFORM=${Image}
 
 ${CODETREE}/scripts/${SCRIPT} ${SCRIPT_ARGS:-}
