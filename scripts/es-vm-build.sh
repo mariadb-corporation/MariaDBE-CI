@@ -105,7 +105,7 @@ then
        -y --force-yes \
        install git build-essential cmake make libaio-dev libssl-dev \
        libncurses5-dev devscripts \
-       libcurl3-dev libnuma-dev libsnappy-dev libzstd-dev uuid-dev
+       libcurl3-dev libnuma-dev libsnappy-dev uuid-dev
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
@@ -114,7 +114,7 @@ then
        apt-utils build-essential python-dev sudo git \
        devscripts equivs libcurl4-openssl-dev \
        ccache python3 python3-pip curl libssl-dev \
-       libzstd-dev libevent-dev dpatch gawk gdb \
+       libevent-dev dpatch gawk gdb \
        libboost-dev libcrack2-dev libjudy-dev libnuma-dev \
        libsnappy-dev libxml2-dev unixodbc-dev uuid-dev \
        fakeroot iputils-ping \
@@ -125,11 +125,20 @@ then
        socat lsof valgrind apt-transport-https \
        software-properties-common dirmngr rsync netcat \
        libboost-all-dev libsnappy-dev flex expect \
-       net-tools  
+       net-tools
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libzstd-dev
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        build-dep mariadb-server
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install dh-apparmor libjemalloc-dev libkrb5-dev \
+       libreadline-gplv2-dev libsystemd-dev
 
   cat /etc/*release | grep -E "Trusty|wheezy"
   if [ $? == 0 ]
@@ -160,14 +169,18 @@ then
     then
         enable_power_tools="--enablerepo=PowerTools"
     fi
+    sudo yum -y insrall yum-utils
+    sudo yum -y groupinstall 'Development Tools'
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
-         gcc gcc-c++ make cmake yum-utils libaio-devel \
-         openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel
-    sudo yum install -y --nogpgcheck rpm-build
-    sudo yum install -y --nogpgcheck rpmbuild
-    sudo yum install -y --nogpgcheck rpmdevtools
-    sudo yum-builddep -y mariadb-server
+         libaio-devel libxml2-devel perl-Data-Dumper \
+         perl-XML-LibXML curl-devel libxml2-devel gnutls-devel perl-XML-Simple \
+         boost-devel check-devel which systemd-devel \
+         cracklib-devel rsync socat lsof patch valgrind-devel \
+         snappy-devel expect net-tools
+    sudo yum install -y --nogpgcheck ${enable_power_tools} mhash-devel
+    sudo yum install -y --nogpgcheck ${enable_power_tools} scons 
+    sudo yum install -y --nogpgcheck ${enable_power_tools} Judy-devel 
+    sudo yum install -y --nogpgcheck ${enable_power_tools} jemalloc
     sudo yum install -y --nogpgcheck devtoolset-3-gcc-c++   devtoolset-3-valgrind-devel devtoolset-3-libasan-devel   clang
 fi
 
@@ -176,11 +189,24 @@ then
     # We need zypper here
     sudo zypper -n refresh
     sudo zypper -n update
-    sudo zypper -n install gcc gcc-c++ make cmake libaio-devel \
-         openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel
+    sudo zypper -n install \
+        cmake make gcc \
+        gcc-c++ libaio-devel perl-XML-Simple \
+        bison libopenssl-devel \
+        ncurses-devel \
+        rsync socat lsof tar gzip bzip2 rpm-build \
+        checkpolicy policycoreutils curl perl \
+        wget sudo git-core \
+        expect net-tools flex autoconf automake libtool \
+        perl-XML-LibXML patch zlib-devel \
+        libgcrypt-devel  libxml2-devel libcurl-devel  \
+        boost-devel snappy-devel valgrind-devel check-devel \
+        libevent-devel libgnutls-devel pam-devel \
+        systemd-devel libgnutls-devel
     sudo zypper -n install rpmbuild
     sudo zypper -n install rpm-build
+    sudo zypper -n install scons
+    sudo zypper -n install perl-Data-Dump
     sudo zypper -n source-install -d mariadb
 fi
 

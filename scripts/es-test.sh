@@ -125,12 +125,18 @@ then
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
-       install libaio-dev  \
+       install git build-essential cmake make libaio-dev libssl-dev \
+       libncurses5-dev devscripts \
+       libcurl3-dev libnuma-dev libsnappy-dev uuid-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install dh-systemd libaio-dev  \
        perl-modules libmhash-dev libxml-simple-perl patch \
        apt-utils build-essential python-dev sudo git \
        devscripts equivs libcurl4-openssl-dev \
        ccache python3 python3-pip curl libssl-dev \
-       libzstd-dev libevent-dev dpatch gawk gdb \
+       libevent-dev dpatch gawk gdb \
        libboost-dev libcrack2-dev libjudy-dev libnuma-dev \
        libsnappy-dev libxml2-dev unixodbc-dev uuid-dev \
        fakeroot iputils-ping \
@@ -141,7 +147,20 @@ then
        socat lsof valgrind apt-transport-https \
        software-properties-common dirmngr rsync netcat \
        libboost-all-dev libsnappy-dev flex expect \
-       net-tools  
+       net-tools
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libzstd-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       build-dep mariadb-server
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install dh-apparmor libjemalloc-dev libkrb5-dev \
+       libreadline-gplv2-dev libsystemd-dev
 fi
 
 if [[ ${packager_type} == "yum" ]]
@@ -175,14 +194,24 @@ then
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install \
-        gcc-c++ libaio-devel pam-devel perl-XML-Simple \
-        libgnutls-devel bison openssl-devel systemd-devel \
-        ncurses-devel libxml2-devel libcurl-devel \
+        cmake make gcc \
+        gcc-c++ libaio-devel perl-XML-Simple \
+        bison libopenssl-devel \
+        ncurses-devel \
         rsync socat lsof tar gzip bzip2 rpm-build \
-        checkpolicy policycoreutils curl perl check-devel \
-        valgrind-devel wget sudo git scons boost-devel \
-        snappy-devel expect net-tools flex autoconf automake libtool \
-        perl-Data-Dumper perl-XML-LibXML patch
+        checkpolicy policycoreutils curl perl \
+        wget sudo git-core \
+        expect net-tools flex autoconf automake libtool \
+        perl-XML-LibXML patch zlib-devel \
+        libgcrypt-devel  libxml2-devel libcurl-devel  \
+        boost-devel snappy-devel valgrind-devel check-devel \
+        libevent-devel libgnutls-devel pam-devel \
+        systemd-devel libgnutls-devel
+    sudo zypper -n install rpmbuild
+    sudo zypper -n install rpm-build
+    sudo zypper -n install scons
+    sudo zypper -n install perl-Data-Dump
+    sudo zypper -n source-install -d mariadb
 fi
 
 
