@@ -159,10 +159,14 @@ then
     sudo yum -y groupinstall 'Development Tools'
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          libaio-devel libxml2-devel perl-Data-Dumper \
-         perl-XML-LibXML curl-devel mhash-devel libxml2-devel gnutls-devel perl-XML-Simple \
-         scons boost-devel check-devel which systemd-devel \
-         cracklib-devel Judy-devel rsync socat lsof patch valgrind-devel \
-         snappy-devel expect jemalloc net-tools
+         perl-XML-LibXML curl-devel libxml2-devel gnutls-devel perl-XML-Simple \
+         boost-devel check-devel which systemd-devel \
+         cracklib-devel rsync socat lsof patch valgrind-devel \
+         snappy-devel expect net-tools
+    sudo yum install -y --nogpgcheck ${enable_power_tools} mhash-devel
+    sudo yum install -y --nogpgcheck ${enable_power_tools} scons 
+    sudo yum install -y --nogpgcheck ${enable_power_tools} Judy-devel 
+    sudo yum install -y --nogpgcheck ${enable_power_tools} jemalloc
 fi
 
 if [[ ${packager_type} == "zypper" ]]

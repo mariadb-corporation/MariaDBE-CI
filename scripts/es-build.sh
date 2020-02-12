@@ -11,8 +11,7 @@ BUILD_TYPE=${BUILD_TYPE:-RelWithDebInfo}
 OS=$(uname -s)
 NCPU=
 PKGARG=package
-PLATFORM=${IMAGE:-ubuntu-2004}
-PLATFORM=`echo $PLATFORM | sed "s/_/-/g" | sed "s/-gcp//" | sed "s/-aws//"`
+PLATFORM=`echo $PLATFORM | sed "s/_/-/g" | sed "s/-gcp//" | sed "s/-aws//"| sed "s/-do//"`
 GIT_BRANCH=
 GIT_CLEAN=no
 TOPDIR="${PWD}/.."
@@ -100,7 +99,7 @@ cd ${BUILDDIR}
 #
 if [[ ${EXT} = deb ]]; then
   cd ${TOPDIR}
-  [[ ${PLATFORM} = "debian-8" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
+  [[ ${PLATFORM} = "debian-jessie" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
   debian/autobake-deb.sh
   RES=$?
   mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
