@@ -102,7 +102,9 @@ if [[ ${EXT} = deb ]]; then
   [[ ${PLATFORM} = "debian-jessie" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
   debian/autobake-deb.sh
   RES=$?
-  mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
+  mv -vf ${TOPDIR}/../* ${TARGET}/
+  #mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
+  #mv -vf ${TOPDIR}/../*.changes ${TARGET}/
 else
   if [[ ${FETCH_COMPAT} = yes ]]; then
     case ${PLATFORM} in
