@@ -147,7 +147,7 @@ then
        socat lsof valgrind apt-transport-https \
        software-properties-common dirmngr rsync netcat \
        libboost-all-dev libsnappy-dev flex expect \
-       net-tools
+       net-tools wget
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
@@ -179,7 +179,7 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make cmake yum-utils libaio-devel \
          openssl-devel gnutls-devel libgcrypt-devel pam-devel \
-         ncurses-devel bison zlib-devel libevent-devel
+         ncurses-devel bison zlib-devel libevent-devel wget
     sudo yum install -y --nogpgcheck ${enable_power_tools} rpm-build
     sudo yum install -y --nogpgcheck ${enable_power_tools} rpmbuild
     sudo yum install -y --nogpgcheck ${enable_power_tools} rpmdevtools
@@ -201,7 +201,7 @@ then
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install \
-        cmake make gcc \
+        cmake make gcc wget \
         gcc-c++ libaio-devel perl-XML-Simple \
         bison libopenssl-devel \
         ncurses-devel \
