@@ -147,6 +147,10 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install chrpath
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libpcre3-dev
 
   cat /etc/*release | grep -E "Trusty|wheezy"
   if [ $? == 0 ]

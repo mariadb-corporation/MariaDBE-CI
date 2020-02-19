@@ -161,6 +161,18 @@ then
        -y --force-yes \
        install dh-apparmor libjemalloc-dev libkrb5-dev \
        libreadline-gplv2-dev libsystemd-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libbison-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install chrpath
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install libpcre3-dev
 fi
 
 if [[ ${packager_type} == "yum" ]]
