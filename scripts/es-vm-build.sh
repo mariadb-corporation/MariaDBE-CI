@@ -226,20 +226,24 @@ then
 fi
 
 # cmake
-wget -q https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Linux-x86_64.tar.gz --no-check-certificate
-sudo tar xzf cmake-3.16.4-Linux-x86_64.tar.gz -C /usr/ --strip-components=1
+CMAKE_VER="3.16.4"
+wget -q https://github.com/Kitware/CMake/releases/download/v${CMAKE_VER}/cmake-${CMAKE_VER}-Linux-x86_64.tar.gz --no-check-certificate
+sudo tar xzf cmake-${CMAKE_VER}-Linux-x86_64.tar.gz -C /usr/ --strip-components=1
+rm cmake-${CMAKE_VER}-Linux-x86_64.tar.gz
 
 cmake_version=`cmake --version | grep "cmake version" | awk '{ print $3 }'`
-if [ "`echo -e "3.16.4\n$cmake_version"|sort -V|head -n 1`" != "3.16.4" ] ; then
+if [ "`echo -e "${CMAKE_VER}\n$cmake_version"|sort -V|head -n 1`" != "${CMAKE_VER}" ] ; then
     echo "cmake does not work! Trying to build from source"
-    wget -q https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4.tar.gz --no-check-certificate
-    tar xzf cmake-3.16.4.tar.gz
-    cd cmake-3.16.4
+    wget -q https://github.com/Kitware/CMake/releases/download/v${CMAKE_VER}/cmake-${CMAKE_VER}.tar.gz --no-check-certificate
+    tar xzf cmake-${CMAKE_VER}.tar.gz
+    cd cmake-${CMAKE_VER}
 
     ./bootstrap
     gmake
     sudo make install
     cd ..
+    rm -rf cmake-${CMAKE_VER}.tar.gz
+    rm -rf cmake-${CMAKE_VER}
 fi
 
 export PLATFORM=${Image}
