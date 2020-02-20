@@ -99,8 +99,10 @@ fi
 if [[ ${packager_type} == "apt" ]]
 then
   # DEB-based distro
-  export LC_ALL="en_US.UTF-8"
-  sudo dpkg-reconfigure locales
+  sudo export LANGUAGE=en_US.UTF-8
+  sudo export LANG=en_US.UTF-8
+  sudo export LC_ALL=en_US.UTF-8
+  sudo locale-gen en_US.UTF-8
   export DEBIAN_FRONTEND=noninteractive
   sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
