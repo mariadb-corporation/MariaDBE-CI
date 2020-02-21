@@ -207,7 +207,8 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} Judy-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} jemalloc
     sudo yum install -y --nogpgcheck ${enable_power_tools} devtoolset-3-gcc-c++ devtoolset-3-valgrind-devel devtoolset-3-libasan-devel clang
-    sudo yum install -y --nogpgcheck ${enable_power_tools}  perl-Time-HiRes
+    sudo yum install -y --nogpgcheck ${enable_power_tools} perl-Time-HiRes
+    sudo yum install -y --nogpgcheck ${enable_power_tools} perl-Memoize
 fi
 
 if [[ ${packager_type} == "zypper" ]]

@@ -104,6 +104,7 @@ if [[ ${EXT} = deb ]]; then
   RES=$?
   #mv -vf ${TOPDIR}/../* ${TARGET}/
   mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/
+  mv -vf ${TOPDIR}/../*.ddeb ${TARGET}/
   mv -vf ${TOPDIR}/../*.changes ${TARGET}/
   mv -vf ${TOPDIR}/../*.buildinfo ${TARGET}/
   mv -vf ${TOPDIR}/../*.dsc ${TARGET}/
