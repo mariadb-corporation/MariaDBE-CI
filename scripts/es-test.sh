@@ -17,6 +17,7 @@ unset WSREP_EXPORT
 # specific ARGS for different TESTS
 MTR_BIG_TEST_ARGS=" --max-test-fail=20 --big-test"
 GALERA_TEST_ARGS=" --suite=galera,wsrep,galera_3nodes,galera_sr,galera_3nodes_sr --max-test-fail=0 --testcase-timeout=120 --big-test"
+[ ! -d "$(dirname ${0})/../mysql-test/suite/galera_sr" ] && GALERA_TEST_ARGS=" --suite=galera,wsrep,galera_3nodes --max-test-fail=0 --testcase-timeout=120 --big-test"
 NORMAL_TEST_ARGS=""
 PSPROTO_TEST_ARGS=" --ps-protocol"
 EXTRA_TEST_ARGS=" --suite=funcs_1,funcs_2,stress,jp --testcase-timeout=120 --mysqld=--open-files-limit=0 --mysqld=--log-warnings=1"
