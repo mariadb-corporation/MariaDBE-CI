@@ -133,7 +133,9 @@ else
     esac
   fi
 #
-  cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
+  BUILDDIR=${TOPDIR}
+  cd ${BUILDDIR}
+  cmake . ${CMAKE_ARGS}
   make -j${NCPU} ${PKGARG} VERBOSE=1
   RES=$?
   mv -vf ${BUILDDIR}/*.${EXT} ${TARGET}/
