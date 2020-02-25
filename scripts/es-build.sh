@@ -39,10 +39,12 @@ while [[ ${#} -gt 0 ]]; do
       FETCH_COMPAT=yes
       EXT=rpm
       CMAKE_ARGS+=" -DRPM=${PLATFORM/-/}"
+      CMAKE_ARGS=`echo ${CMAKE_ARGS} | sed "s/-DMYSQL_MAINTAINER_MODE=OFF//g"`
       shift
       ;;
     --make-deb)
       EXT=deb
+      CMAKE_ARGS=`echo ${CMAKE_ARGS} | sed "s/-DMYSQL_MAINTAINER_MODE=OFF//g"`
       shift
       ;;
     --with-asan)
