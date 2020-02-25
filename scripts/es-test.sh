@@ -134,7 +134,7 @@ then
        -y --force-yes \
        install dh-systemd libaio-dev  \
        perl-modules libmhash-dev libxml-simple-perl patch \
-       apt-utils build-essential python-dev sudo git \
+       apt-utils build-essential sudo git \
        devscripts equivs libcurl4-openssl-dev \
        ccache python3 python3-pip curl libssl-dev \
        libevent-dev dpatch gawk gdb \
@@ -174,6 +174,14 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes \
        install libpcre3-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install python-dev
+  sudo -E apt-get -q -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
+       -y --force-yes \
+       install python2-dev
 fi
 
 if [[ ${packager_type} == "yum" ]]
