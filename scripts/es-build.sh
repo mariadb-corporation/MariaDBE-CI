@@ -4,7 +4,7 @@ set -x
 #
 cd $(dirname ${0})
 #
-CMAKE_DEFAULT_ARGS="-DBUILD_CONFIG=enterprise -DMYSQL_MAINTAINER_MODE=OFF"
+CMAKE_DEFAULT_ARGS="-DBUILD_CONFIG=enterprise"
 CMAKE_ARGS=${CMAKE_DEFAULT_ARGS}
 ASAN_ARGS="-DWITH_ASAN=ON"
 BUILD_TYPE=${BUILD_TYPE:-RelWithDebInfo}
@@ -33,6 +33,7 @@ while [[ ${#} -gt 0 ]]; do
   case ${1} in
     --make-sourcetar)
       PKGARG=dist
+      CMAKE_ARGS+=" -DMYSQL_MAINTAINER_MODE=OFF"
       shift
       ;;
     --make-rpm)
@@ -133,6 +134,10 @@ else
     esac
   fi
 #
+  minor_version=`cat $(dirname ${0})/../VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
+  if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
+    CMAKE_ARGS+="  -DPLUGIN_COLUMNSTORE=YES"
+  fi
   cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
   make -j${NCPU} ${PKGARG} VERBOSE=1
   RES=$?

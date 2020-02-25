@@ -269,12 +269,12 @@ if [[ ${PACKAGE} = Galera ]]; then
   export GALERA_PACKAGE="galera-enterprise-4"
   export GALERA_PACKAGE_DEB="galera-enterprise-4"
   export GALERA_REPO="repo4"
-  minor_version=`cat $(dirname ${0})/VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
+  minor_version=`cat $(dirname ${0})/../VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
   if [[ "${minor_version}" == "2" || "${minor_version}" == "3" ]]; then
     export GALERA_PACKAGE="galera"
     export GALERA_PACKAGE_DEB="galera-3"
     export GALERA_REPO="repo3"
-  fi 
+  fi
   if [[ -e /usr/bin/apt-get ]]; then
     sudo apt update
     sudo apt install -y dirmngr lsb-release
