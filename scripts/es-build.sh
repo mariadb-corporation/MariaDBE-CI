@@ -4,7 +4,7 @@ set -x
 #
 cd $(dirname ${0})
 #
-CMAKE_DEFAULT_ARGS="-DBUILD_CONFIG=enterprise"
+CMAKE_DEFAULT_ARGS="-DBUILD_CONFIG=enterprise -DMYSQL_MAINTAINER_MODE=OFF"
 CMAKE_ARGS=${CMAKE_DEFAULT_ARGS}
 ASAN_ARGS="-DWITH_ASAN=ON"
 BUILD_TYPE=${BUILD_TYPE:-RelWithDebInfo}
@@ -33,7 +33,6 @@ while [[ ${#} -gt 0 ]]; do
   case ${1} in
     --make-sourcetar)
       PKGARG=dist
-      CMAKE_ARGS+=" -DMYSQL_MAINTAINER_MODE=OFF"
       shift
       ;;
     --make-rpm)
