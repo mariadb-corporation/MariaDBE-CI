@@ -3,7 +3,7 @@ Key-Type: RSA
 Key-Length: 4096
 Subkey-Type: RSA
 Subkey-Length: 4096
-Subkey-Usage: encrypt, sign, auth
+Subkey-Usage: encrypt, auth
 Name-Real: MariaDB Platform QA
 Name-Email: platform-qa@mariadb.com
 Expire-Date: 0
