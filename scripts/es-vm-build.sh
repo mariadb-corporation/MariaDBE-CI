@@ -246,7 +246,7 @@ then
 fi
 
 # cmake
-CMAKE_VER="3.16.4"
+CMAKE_VER="3.15.3"
 wget -q https://github.com/Kitware/CMake/releases/download/v${CMAKE_VER}/cmake-${CMAKE_VER}-Linux-x86_64.tar.gz --no-check-certificate
 sudo tar xzf cmake-${CMAKE_VER}-Linux-x86_64.tar.gz -C /usr/ --strip-components=1
 rm cmake-${CMAKE_VER}-Linux-x86_64.tar.gz
