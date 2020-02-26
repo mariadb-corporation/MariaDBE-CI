@@ -20,6 +20,7 @@ TARGET=${TOPDIR}/target
 CMAKE_RUNDIR=..
 FETCH_COMPAT=no
 EXT=tar.gz
+unset MAKE_SUDO
 #
 function show_help {
 cat <<-EOF
@@ -40,6 +41,7 @@ while [[ ${#} -gt 0 ]]; do
       EXT=rpm
       CMAKE_ARGS+=" -DRPM=${PLATFORM/-/}"
       CMAKE_ARGS=`echo ${CMAKE_ARGS} | sed "s/-DMYSQL_MAINTAINER_MODE=OFF//g"`
+      MAKE_SUDO="sudo "
       shift
       ;;
     --make-deb)
@@ -140,7 +142,7 @@ else
   #  CMAKE_ARGS+=" -DPLUGIN_COLUMNSTORE=YES"
   #fi
   cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
-  make -j${NCPU} ${PKGARG} VERBOSE=1
+  ${MAKE_SUDO} make -j${NCPU} ${PKGARG} VERBOSE=1
   RES=$?
   mv -vf ${BUILDDIR}/*.${EXT} ${TARGET}/
 fi
