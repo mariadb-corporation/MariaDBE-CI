@@ -1,0 +1,7 @@
+create_rpm_repos.sh $target $box - takes RPMs from mdbe-ci-repo@mariadb.com, create repsotory, copies back to mdbe-ci-repo@mariadb.com
+create_rpm_all.sh $target - calls create_rpm_repos.sh for all boxes
+create_deb_repos.sh $target - create DEB repository for all Debians and Ubuntus, copyes it back to mdbe-ci-repo@mariadb.com
+
+TODO
+* rewrite in Python
+* copy RPM repos to reasonable structure (without *_gcp)
