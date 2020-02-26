@@ -80,12 +80,12 @@ class Repository():
 
         #child = pexpect.spawn('reprepro -Vb ' + self.path + ' export')
 
-    def include_debs(self):
-        if Path(PACKAGE).is_file():
-            pass
-        else:
-            print(f'E: package {PACKAGE} doesn\'t exist or mistyped!')
-            sys.exit(ENOPACKAGE)
+#    def include_debs(self):
+#        if Path(PACKAGE).is_file():
+#            pass
+#        else:
+#            print(f'E: package {PACKAGE} doesn\'t exist or mistyped!')
+#            sys.exit(ENOPACKAGE)
 
 
 zzz = Repository()
