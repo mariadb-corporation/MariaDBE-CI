@@ -141,8 +141,8 @@ else
   if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
     CMAKE_ARGS+=" -DPLUGIN_COLUMNSTORE=YES"
   fi
-  cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
-  ${MAKE_SUDO} make -j${NCPU} ${PKGARG} VERBOSE=1
+  sudo cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
+  #${MAKE_SUDO} make -j${NCPU} ${PKGARG} VERBOSE=1
   RES=$?
   mv -vf ${BUILDDIR}/*.${EXT} ${TARGET}/
 fi
