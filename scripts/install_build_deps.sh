@@ -121,6 +121,19 @@ then
          sudo apt-get install -y --force-yes libgcrypt11-dev
      fi
   fi
+
+  # columnstore
+  sudo ${apt_opt} \
+       install libboost-all-dev libsnappy-dev flex expect 
+  sudo ${apt_opt} \
+  sudo ${apt_opt} \
+       install net-tools autoconf automake libtool
+  sudo ${apt_opt} \
+       install pkg-config
+  sudo ${apt_opt} \
+       install libjemalloc1
+  sudo ${apt_opt} \
+       install libjemalloc2
   #sudo apt-get remove -y --force-yes cmake
 fi
 
@@ -129,6 +142,14 @@ then
     # YUM!
     sudo yum clean all
     sudo yum update -y
+    sudo subscription-manager repos --enable=rhel-6-server-optional-rpms
+
+    #sudo subscription-manager release --set=7.5
+    sudo subscription-manager repos --enable=rhel-7-server-optional-rpms
+
+    #sudo subscription-manager release --set=8
+    sudo subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms
+
     unset enable_power_tools
     yum repolist all | grep PowerTools
     if [ $? == 0 ]
@@ -162,6 +183,7 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} libffi-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} python-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} python2-pip
+
     sudo yum -y erase cmake || true
 fi
 
@@ -190,6 +212,8 @@ then
     sudo zypper -n install perl-Data-Dump
     sudo zypper -n source-install -d mariadb
     sudo zypper -n remove cmake
+    #columnstore
+    sudo zypper -n install snappy-devel expect jemalloc net-tools flex libboost_*-devel autoconf automake libtool
 fi
 
 
