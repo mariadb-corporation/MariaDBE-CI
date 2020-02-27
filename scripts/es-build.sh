@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 set -x
 #
@@ -70,6 +70,9 @@ while [[ ${#} -gt 0 ]]; do
 done
 #
 CMAKE_ARGS+=" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+
+cmake --version
+
 # TODO
 # remove after Werror fixes in debug mode
 # [[ ${BUILD_TYPE} = Debug ]] && CMAKE_ARGS+=" -DMYSQL_MAINTAINER_MODE=OFF"
