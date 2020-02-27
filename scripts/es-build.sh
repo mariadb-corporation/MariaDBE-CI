@@ -107,7 +107,13 @@ cd ${BUILDDIR}
 if [[ ${EXT} = deb ]]; then
   cd ${TOPDIR}
   [[ ${PLATFORM} = "debian-jessie" ]] && sed s/"dch -b"/"dch -b --force-distribution"/g -i debian/autobake-deb.sh
-  debian/autobake-deb.sh
+
+  minor_version=`cat $(dirname ${0})/../VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
+  if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
+    CMAKEFLAGS='-DPLUGIN_COLUMNSTORE=YES' debian/autobake-deb.sh
+  else
+    debian/autobake-deb.sh
+  fi
   RES=$?
   #mv -vf ${TOPDIR}/../* ${TARGET}/
   mv -vf ${TOPDIR}/../*.${EXT} ${TARGET}/

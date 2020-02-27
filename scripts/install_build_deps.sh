@@ -66,7 +66,7 @@ then
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes"
   sudo ${apt_opt} \
-       install git build-essential make libaio-dev libssl-dev \
+       install git build-essential make cmake libaio-dev libssl-dev \
        libncurses5-dev devscripts \
        libcurl3-dev libnuma-dev libsnappy-dev uuid-dev
   sudo ${apt_opt} \
@@ -121,7 +121,7 @@ then
          sudo apt-get install -y --force-yes libgcrypt11-dev
      fi
   fi
-  sudo apt-get remove -y --force-yes cmake
+  #sudo apt-get remove -y --force-yes cmake
 fi
 
 if [[ ${packager_type} == "yum" ]]
