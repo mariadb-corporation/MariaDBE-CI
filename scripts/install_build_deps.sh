@@ -126,7 +126,6 @@ then
   sudo ${apt_opt} \
        install libboost-all-dev libsnappy-dev flex expect 
   sudo ${apt_opt} \
-  sudo ${apt_opt} \
        install net-tools autoconf automake libtool
   sudo ${apt_opt} \
        install pkg-config
