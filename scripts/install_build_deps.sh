@@ -59,7 +59,7 @@ then
   export LANG=en_US.UTF-8
   export LC_ALL=en_US.UTF-8
   sudo locale-gen en_US.UTF-8
-  sudo  dpkg-reconfigure --frontend=noninteractive locales 
+  sudo dpkg-reconfigure --frontend=noninteractive locales 
   sudo update-locale LANG=en_US.UTF-8
   export DEBIAN_FRONTEND=noninteractive
   export apt_opt="-E apt-get -q -o Dpkg::Options::=--force-confold \

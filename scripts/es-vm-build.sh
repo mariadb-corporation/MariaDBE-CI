@@ -53,6 +53,7 @@ ${script_dir}/install_build_deps.sh
 sudo wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake.sh
 sudo /bin/bash /tmp/cmake.sh --prefix=/usr --exclude-subdir --skip-license
 sudo rm -f /tmp/cmake.sh
+cmake --version
 
 # cmake
 #CMAKE_VER="3.15.3"
