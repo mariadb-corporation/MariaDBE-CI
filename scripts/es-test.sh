@@ -23,6 +23,7 @@ NORMAL_TEST_ARGS=""
 PSPROTO_TEST_ARGS=" --ps-protocol"
 EXTRA_TEST_ARGS=" --suite=funcs_1,funcs_2,stress,jp --testcase-timeout=120 --mysqld=--open-files-limit=0 --mysqld=--log-warnings=1"
 ENGINES_TEST_ARGS=" --suite=spider,spider/bg,engines/funcs,engines/iuds --testcase-timeout=120 --mysqld=--open-files-limit=0 --mysqld=--log-warnings=1"
+COLUMNSTORE_TEST_ARGS=" --suite=columnstore"
 #
 TARNAME=""
 #
@@ -63,6 +64,11 @@ while [[ ${#} -gt 0 ]]; do
       ;;
     --mtr-engines-test)
       MTR_RUN_ARGS+=${ENGINES_TEST_ARGS}
+      TARNAME=${1/--/}
+      shift
+      ;;
+    --mtr-columnstore-test)
+      MTR_RUN_ARGS+=${COLUMNSTORE_TEST_ARGS}
       TARNAME=${1/--/}
       shift
       ;;
