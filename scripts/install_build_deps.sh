@@ -192,11 +192,12 @@ then
     if [ "${platform_version}" == "6" ]; then
       # boost update
       BOOST_VER="1.61.0"
-      wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER}.tar.gz
-      tar xzf boost_${BOOST_VER}.tar.gz
-      cd boost_${BOOST_VER}
+      wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER//./_}.tar.gz
+      tar xzf boost_${BOOST_VER//./_}.tar.gz
+      cd boost_${BOOST_VER//./_}
       ./bootstrap.sh
       sudo ./b2 install
+      cd ..
     fi
 
     sudo yum -y erase cmake || true
