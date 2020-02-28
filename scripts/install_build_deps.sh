@@ -141,13 +141,19 @@ then
     # YUM!
     sudo yum clean all
     sudo yum update -y
-    sudo subscription-manager repos --enable=rhel-6-server-optional-rpms
+    if [ "${platform_version}" == "6" ]; then
+      sudo subscription-manager repos --enable=rhel-6-server-optional-rpms
+    fi
 
-    #sudo subscription-manager release --set=7.5
-    sudo subscription-manager repos --enable=rhel-7-server-optional-rpms
+    if [ "${platform_version}" == "7" ]; then
+      #sudo subscription-manager release --set=7.5
+      sudo subscription-manager repos --enable=rhel-7-server-optional-rpms
+    fi
 
-    #sudo subscription-manager release --set=8
-    sudo subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms
+    if [ "${platform_version}" == "8" ]; then
+      #sudo subscription-manager release --set=8
+      sudo subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms
+    fi
 
     unset enable_power_tools
     yum repolist all | grep PowerTools
@@ -182,6 +188,16 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} libffi-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} python-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} python2-pip
+
+    if [ "${platform_version}" == "6" ]; then
+      # boost update
+      BOOST_VER="1.61.0"
+      wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER}.tar.gz
+      tar xzf boost_${BOOST_VER}.tar.gz
+      cd boost_${BOOST_VER}
+      ./bootstrap.sh
+      sudo ./b2 install
+    fi
 
     sudo yum -y erase cmake || true
 fi
