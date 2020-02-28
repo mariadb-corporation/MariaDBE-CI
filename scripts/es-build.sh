@@ -147,7 +147,8 @@ else
   fi
 #
   minor_version=`cat $(dirname ${0})/../VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
-  if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
+#  if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
+  if [[ "${minor_version}" == "4" ]]; then
     CMAKE_ARGS+=" -DPLUGIN_COLUMNSTORE=YES"
   fi
   cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
