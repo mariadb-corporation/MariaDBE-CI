@@ -191,6 +191,7 @@ then
 
     if [ "${platform_version}" == "6" ]; then
       # boost update
+      sudo yum remove -y boost-*
       BOOST_VER="1.61.0"
       wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER//./_}.tar.gz
       tar xzf boost_${BOOST_VER//./_}.tar.gz
