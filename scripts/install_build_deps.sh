@@ -161,7 +161,7 @@ then
     then
         enable_power_tools="--enablerepo=PowerTools"
     fi
-    sudo yum -y insrall yum-utils
+    sudo yum -y install yum-utils
     sudo yum -y groupinstall 'Development Tools'
     sudo yum install -y --nogpgcheck ${enable_power_tools} \
          gcc gcc-c++ make yum-utils libaio-devel \
@@ -189,17 +189,17 @@ then
     sudo yum install -y --nogpgcheck ${enable_power_tools} python-devel
     sudo yum install -y --nogpgcheck ${enable_power_tools} python2-pip
 
-    if [ "${platform_version}" == "6" ]; then
-      # boost update
-      sudo yum remove -y boost-*
-      BOOST_VER="1.61.0"
-      wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER//./_}.tar.gz
-      tar xzf boost_${BOOST_VER//./_}.tar.gz
-      cd boost_${BOOST_VER//./_}
-      ./bootstrap.sh
-      sudo ./b2 install
-      cd ..
-    fi
+#    if [ "${platform_version}" == "6" ]; then
+#      # boost update
+#      sudo yum remove -y boost-*
+#      BOOST_VER="1.61.0"
+#      wget https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_VER//./_}.tar.gz
+#      tar xzf boost_${BOOST_VER//./_}.tar.gz
+#      cd boost_${BOOST_VER//./_}
+#      ./bootstrap.sh
+#      sudo ./b2 install
+#      cd ..
+#    fi
 
     sudo yum -y erase cmake || true
 fi
