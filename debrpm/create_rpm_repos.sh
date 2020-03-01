@@ -27,7 +27,14 @@ cd rpm
 rm -rf ${target}/$box
 mkdir -p ${target}/$box
 
-scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/${target}/packages/$box/RelWithDebInfo/* ${target}/$box/
+if [ "${direct_in_path}" != "" ] ;
+then
+  in_path=${direct_in_path}/$box
+else
+  in_path=/srv/ci-repos/${target}/packages/$box/RelWithDebInfo
+fi
+
+scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:${in_path}/* ${target}/$box/
 
 cd ${target}/$box/
 rpm --resign *.rpm
@@ -36,9 +43,15 @@ gpg2 --output repomd.xml.key --sign repodata/repomd.xml
 gpg2 -a --detach-sign repodata/repomd.xml
 cd ../..
 
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo rm -rf /srv/ci-repos/${target}/yum/$box
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo mkdir -p /srv/ci-repos/${target}/yum/$box
-rsync -avz --progress -e ssh ${target}/$box/ timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/${target}/yum/$box/
+if [ "${direct_out_path}" != "" ] ;
+then
+  out_path=${direct_out_path}/$box
+else
+  out_path=/srv/ci-repos/${target}/packages/$box/RelWithDebInfo
+fi
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo rm -rf ${out_path}
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo mkdir -p ${out_path}
+rsync -avz --progress -e ssh ${target}/$box/ timofey_turenko_mariadb_com@mdbe-ci-repo:${out_path}/
 
 rm -rf ${target}/$box
 
