@@ -35,8 +35,8 @@ reprepro -Vb $target processincoming default
 reprepro -Vb $target export
 
 out_path=${direct_ot_path:-"/srv/ci-repos/$target/apt"}
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo rm -rf ${out_path}
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo mkdir -p ${out_path}
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo "sudo rm -rf ${out_path}"
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo "sudo mkdir -p ${out_path}; chmod 777 ${out_path}"
 rsync -avz --progress -e ssh $target/ timofey_turenko_mariadb_com@mdbe-ci-repo:${out_path}/
 
 rm -rf $target
