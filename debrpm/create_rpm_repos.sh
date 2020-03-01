@@ -27,19 +27,18 @@ cd rpm
 rm -rf ${target}/$box
 mkdir -p ${target}/$box
 
-scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/repository/logs/$target/DEBRPM/$box/RelWithDebInfo/* ${target}/$box/
+scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/${target}/packages/$box/RelWithDebInfo/* ${target}/$box/
 
 cd ${target}/$box/
 rpm --resign *.rpm
 createrepo -d -s sha .
-#rpm --addsign *.rpm
 gpg2 --output repomd.xml.key --sign repodata/repomd.xml
 gpg2 -a --detach-sign repodata/repomd.xml
 cd ../..
 
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo rm -rf /srv/repository/logs/${target}/RPM/$box
-ssh timofey_turenko_mariadb_com@mdbe-ci-repo mkdir -p /srv/repository/logs/${target}/RPM/$box
-rsync -avz --progress -e ssh ${target}/$box/ timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/repository/logs/${target}/RPM/$box
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo rm -rf /srv/ci-repos/${target}/yum/$box
+ssh timofey_turenko_mariadb_com@mdbe-ci-repo mkdir -p /srv/ci-repos/${target}/yum/$box
+rsync -avz --progress -e ssh ${target}/$box/ timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/${target}/yum/$box/
 
 rm -rf ${target}/$box
 
