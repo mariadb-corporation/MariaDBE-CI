@@ -9,9 +9,10 @@ jenkins_target=$1
 export direct_in_path=/srv/jenkins/${jenkins_target}/DEB/*
 export direct_out_path=/srv/jenkins/${jenkins_target}/apt
 
-${script_dir}/create_deb_repos.sh x
+t=`openssl rand -hex 8`
+${script_dir}/create_deb_repos.sh $t
 
 export direct_in_path=/srv/jenkins/${jenkins_target}/RPMS
 export direct_out_path=/srv/jenkins/${jenkins_target}/yum
 
-${script_dir}/create_rpm_all.sh x
+${script_dir}/create_rpm_all.sh $t
