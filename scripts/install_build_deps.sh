@@ -65,6 +65,7 @@ then
   export apt_opt="-E apt-get -q -o Dpkg::Options::=--force-confold \
        -o Dpkg::Options::=--force-confdef \
        -y --force-yes"
+  sudo ${apt_opt} update
   sudo ${apt_opt} \
        install git build-essential make cmake libaio-dev libssl-dev \
        libncurses5-dev devscripts \
