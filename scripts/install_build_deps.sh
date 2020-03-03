@@ -208,10 +208,6 @@ fi
 if [[ ${packager_type} == "zypper" ]]
 then
     # We need zypper here
-
-    # KOSTYL'
-    ./suse
-
     sudo zypper -n refresh
     sudo zypper -n update
     sudo zypper -n install \
