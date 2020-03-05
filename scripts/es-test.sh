@@ -170,7 +170,9 @@ sudo chown ${MYSQL_USER}:${MYSQL_GROUP} ${MYSQL_DATADIR}
 
 # hack to be compatible with branches without XML generation
 cat lib/mtr_report.pm | grep "xml_report"
-if [[ $? != 0 ]]; then
+if [ -f mtr_report_junit.pm ]; then
+  echo "Trying to create JUnit report"
+else
   MTR_JUNIT_ARGS=""
 fi
 
