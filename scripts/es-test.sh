@@ -7,8 +7,7 @@ MYSQL_USER=mysql
 MYSQL_GROUP=mysql
 MYSQL_VARDIR=/var/tmp/mtr
 MYSQL_DATADIR=/var/lib/mysql
-PLATFORM=${IMAGE:-NO-DEFAULT-HERE}
-PLATFORM=`echo $PLATFORM | sed "s/_/-/g" | sed "s/-gcp//" | sed "s/-aws//"`
+
 #
 MTR_DEFAULT_ARGS="--max-save-core=0 --max-save-datadir=1 --force --retry=3 --parallel=auto --vardir=${MYSQL_VARDIR}"
 MTR_RUN_ARGS=${MTR_DEFAULT_ARGS}
@@ -87,19 +86,19 @@ ${script_dir}/install_build_deps.sh
 #
 # here we are going to create unprivileged mysql user if doesn't exist
 if [[ ! $(getent passwd ${MYSQL_USER} > /dev/null 2>&1) ]]; then
-  case ${PLATFORM} in
-    centos* | rhel* | sles* | suse* )
+  case ${platform} in
+    centos | rhel | sles | suse )
       sudo groupadd -r ${MYSQL_GROUP} 2> /dev/null || true
       sudo useradd -M -r --home ${MYSQL_DATADIR} --shell /sbin/nologin \
         --comment "MySQL server" --gid ${MYSQL_GROUP} ${MYSQL_USER} 2> /dev/null || true
       ;;
-    debian* | ubuntu* )
+    debian | ubuntu )
       sudo addgroup --system ${MYSQL_GROUP} > /dev/null 2>&1
       sudo adduser --system --disabled-login --ingroup ${MYSQL_GROUP} --no-create-home \
     --home /nonexistent --gecos "MySQL Server" --shell /bin/false ${MYSQL_USER} > /dev/null 2>&1
       ;;
       *)
-        echo "Testing on \"${PLATFORM}\" is not implemented!"
+        echo "Testing on \"${platform}\" is not implemented!"
         exit 1
       ;;
   esac
