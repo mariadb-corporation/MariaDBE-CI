@@ -156,5 +156,6 @@ else
   ${MAKE_SUDO} make -j${NCPU} ${PKGARG} VERBOSE=1
   RES=$?
   mv -vf ${BUILDDIR}/*.${EXT} ${TARGET}/
+  echo ${CMAKE_ARGS} > ${TARGET}/cmake_args
 fi
 exit $RES
