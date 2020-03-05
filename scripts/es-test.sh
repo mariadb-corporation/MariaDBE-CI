@@ -32,7 +32,7 @@ TARNAME=""
 while [[ ${#} -gt 0 ]]; do
   case ${1} in
     --junit-report)
-      MTR_RUN_ARGS+=" --junit-output=/tmp/${PACKAGE}_${RANDOM}_${RANDOM}.xml --junit-package=${PACKAGE}"
+      MTR_JUNIT_ARGS=" --junit-output=/tmp/${PACKAGE}_${RANDOM}.xml --junit-package=${PACKAGE}"
       shift
       ;;
     --mtr-big-test)
@@ -167,7 +167,14 @@ sudo mkdir -p ${MYSQL_VARDIR}
 sudo mkdir -p ${MYSQL_DATADIR}
 sudo chown ${MYSQL_USER}:${MYSQL_GROUP} ${MYSQL_VARDIR}
 sudo chown ${MYSQL_USER}:${MYSQL_GROUP} ${MYSQL_DATADIR}
-sudo su - ${MYSQL_USER} -s /bin/bash -c "${WSREP_EXPORT} cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS}"
+
+# hack to be compatible with branches without XML generation
+cat lib/mtr_report.pm | grep "xml_report"
+if [[ $? != 0 ]]; then
+  MTR_JUNIT_ARGS=""
+fi
+
+sudo su - ${MYSQL_USER} -s /bin/bash -c "${WSREP_EXPORT} cd ${RUNDIR} && perl mysql-test-run.pl ${MTR_RUN_ARGS} ${MTR_JUNIT_ARGS}"
 MTR_RETCODE=${?}
 [[ ${MTR_RETCODE} -ne 0 ]] && tar czf ${TARNAME}.tar.gz ${MYSQL_VARDIR}
 sudo mv -vf /tmp/${PACKAGE}_*.xml ${TARNAME}.tar.gz ${RUNDIR}/../ ||:
