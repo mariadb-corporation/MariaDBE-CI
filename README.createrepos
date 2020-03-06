@@ -1,0 +1,32 @@
+--target - Name of repository
+	for repositories from BuildBot - name of directory
+	for repositories from Jenkins - relative path to the directory with RPMS and DEB subdirs, e.g. 10.2/origin/10.2e-abychko/264ee95dbc0de8cb07e70debbe693d36ca12148f
+
+--ci-repo - absolute path to the directory with all repositories
+	default: '/srv/ci-repos'
+	for Jenkins it should be '/srv/jenkins'
+
+--packages-path - list of subdirs with packages 
+	default: ['packages']
+	for Jenkins: ['RPMS', 'DEB'] (in the command line format: --packages-path RPMS --packages-path DEB)
+
+--rpm - list of RPM distributions
+	default: ['rhel/6', 'rhel/7', 'rhel/8', 'sles/12', 'sles/15']
+	for Jenkins: ['rhel-6', 'rhel-7', 'rhel-8', 'sles-12', 'sles-15'] (-rpm rhel-6 --rpm rhel-7 --rpm rhel-8 --rpm sles-12 --rpm sles-15)
+
+--passphrase - path to the text file with GPG key passphrase
+
+--keyname - GPG key name to sign packages
+	default: 'MariaDB Platform QA'
+
+Examples:
+
+for Jenkins:
+
+./create_repos --target 10.2/origin/10.2e-abychko/264ee95dbc0de8cb07e70debbe693d36ca12148f --ci-repo /srv/jenkins --packages-path RPMS --packages-path DEB --rpm rhel-6 --rpm rhel-7 --rpm rhel-8 --rpm sles-12 --rpm sles-15 --rpm-path RPMS --deb-path DEB --passphrase ~/.config/passphrase
+
+
+for BuildBot:
+./create_repos --target  --passphrase ~/.config/passphrase
+
+
