@@ -149,8 +149,8 @@ class Repository():
                  os.system('createrepo -d -s sha .')
                  os.system('gpg2 --output repomd.xml.key --sign repodata/repomd.xml')
                  os.system('gpg2 -a --detach-sign repodata/repomd.xml')
-                 scp.put(self.path + '/packages/' + rpm,
-                     remote_path = '/srv/ci-repos/' + self.target + '/yum/',
+                 scp.put(self.path + '/packages/' + rpm + '/',
+                     remote_path = '/srv/ci-repos/' + self.target + '/yum/' + rpm + '/',
                      recursive=True)
                  os.chdir(currdir)
             else:
