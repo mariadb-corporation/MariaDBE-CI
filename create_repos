@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+
+# pip3 install paramiko scp python-util
+
+import gnupg
+from optparse import OptionParser
+import pathlib
+import sys
+import os
+import paramiko
+from scp import SCPClient
+import shutil
+import glob
+from pyutil import filereplace
+
+
+KEYNAME = 'MariaDB Platform QA'
+PASSPHRASE = ''
+PATH = '.'
+TARGET = '10.4-enterprise'
+RPMS = [
+        'rhel/6',
+        'rhel/7',
+        'rhel/8',
+        'sles/12',
+        'sles/15',
+]
+
+
+distributions = ['jessie', 'stretch', 'buster']
+distributions += ['xenial', 'bionic', 'focal']
+architectures = ['amd64', 'source']
+components = ['main', 'testing']
+origin = 'MariaDB Enterprise'
+description = 'Enterprise Server test repository'
+label = origin
+
+parser = OptionParser()
+parser.add_option("--passphrase", dest="passphrase", help="Key password phrase")
+parser.add_option("--keyname", dest="keyname", help="GPG key to sign with")
+parser.add_option("--target", dest="target", help="Path to packages in CI")
+
+
+(options, args) = parser.parse_args()
+
+
+if options.keyname:
+    KEYNAME = options.keyname
+
+if options.passphrase:
+    f = open(options.passphrase, 'r')
+    PASSPHRASE = f.read().rstrip('\r\n')
+    f.close()
+
+if options.target:
+    TARGET = options.target
+
+
+class Repository():
+    """Representing Deb Repository"""
+
+    def __init__(self):
+        self.path = os.getcwd() + '/' + TARGET
+        self.target = TARGET
+        shutil.rmtree(self.path, ignore_errors=True)
+        gpg = gnupg.GPG(gpgbinary='gpg2')
+        public_keys = gpg.list_keys(keys = KEYNAME)
+        key_hash = public_keys[0].get('fingerprint')
+        self.gpgkey = public_keys[0].get('keyid')
+        (out, err) = gpg._open_subprocess([ '--with-keygrip', '-K', key_hash]).communicate()
+        l = out.decode("utf-8").splitlines()
+        keygrip = l[next(x for x, val in enumerate(l) if val.find('Keygrip') > 0)].split('=',1)[1]
+        os.system('/usr/lib/gnupg2/gpg-preset-passphrase --preset --passphrase ' + PASSPHRASE + keygrip)
+
+    def init_repo(self):
+        confdir = self.path + '/apt/' + 'conf'
+        incoming = self.path + '/apt/' + 'incoming'
+        pathlib.Path(confdir).mkdir(parents=True, exist_ok=True)
+        pathlib.Path(incoming).mkdir(parents=True, exist_ok=True)
+        dist_file = open(confdir + '/' + 'distributions', 'w')
+        for dist in distributions:
+            dist_file.write('Origin:' + ' ' + origin + '\n')
+            dist_file.write('Label:' + ' ' + label + '\n')
+            dist_file.write('Codename:' + ' ' + dist + '\n')
+            dist_file.write('Architectures:' + ' ' +
+                            ' '.join(map(str, architectures)) + '\n')
+            dist_file.write('Components:' + ' ' +
+                            ' '.join(map(str, components)) + '\n')
+            dist_file.write('Description:' + ' ' + description + '\n')
+            dist_file.write('SignWith:' + ' ' + self.gpgkey + '\n')
+            dist_file.write('\n')
+        dist_file.close()
+
+        upl_file = open(confdir + '/' + 'uploaders', 'w')
+        upl_file.write('allow * by unsigned\n')
+        upl_file.close()
+
+        inc_file = open(confdir + '/' + 'incoming', 'w')
+        inc_file.write('Name: default\n')
+        inc_file.write('IncomingDir: incoming\n')
+        inc_file.write('TempDir: tmp\n')
+        inc_file.write('Allow: ' + ' '.join(map(str, distributions)) + '\n')
+        inc_file.write('Cleanup: on_deny on_error\n')
+
+    def create_repos(self):
+        print('Copying files from server')
+        ssh = paramiko.SSHClient()
+        ssh.load_system_host_keys()
+        ssh.connect('mdbe-ci-repo', username = 'timofey_turenko_mariadb_com')
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path = '/srv/ci-repos/' + self.target + '/packages/',
+                    local_path = self.path + '/',
+                    recursive=True,
+                    preserve_times=True)
+        print('Moving files to incoming')
+        for dis in ['debian', 'ubuntu']:
+            for file in glob.glob(self.path + '/packages/' + dis + '/*/*'):
+                filename = os.path.basename(file)
+                pre, ext = os.path.splitext(filename)
+                if ext == '.ddeb':
+                    ext = '.deb'
+                shutil.move(file,  self.path + '/apt/incoming/' + pre + ext)
+        print('Replacing ddeb')
+        for toreplace in ['changes', 'buildinfo']:
+            for file in glob.glob(self.path + '/apt/incoming/*.' + toreplace):
+                print('replace ddeb in ' + file)
+                filereplace(file,".ddeb",".deb")
+        print('Call reprepro: processincommig')
+        os.system('reprepro -Vb ' + self.path + '/apt processincoming default')
+        print('Call reprepro: export')
+        os.system('reprepro -Vb ' + self.path + '/apt export')
+        print('Copying repos back to server')
+        ssh.exec_command('sudo rm -rf /srv/ci-repos/' + self.target + '/apt')
+        ssh.exec_command('sudo mkdir -p /srv/ci-repos/' + self.target + '/apt')
+        ssh.exec_command('sudo chmod 777 -R /srv/ci-repos/' + self.target + '/apt')
+        scp.put(self.path + '/apt',
+                    remote_path = '/srv/ci-repos/' + self.target + '/',
+                    recursive=True)
+        ssh.exec_command('sudo chmod 777 -R /srv/ci-repos/' + self.target + '/apt')
+        currdir = os.getcwd()
+        ssh.exec_command('sudo rm -rf /srv/ci-repos/' + self.target + '/yum')
+        ssh.exec_command('sudo mkdir -p /srv/ci-repos/' + self.target + '/yum')
+        ssh.exec_command('sudo chmod 777 -R /srv/ci-repos/' + self.target + '/yum')
+        for rpm in RPMS:
+            print('Create repo for ' + rpm)
+            if os.path.isdir(self.path + '/packages/' + rpm):
+                 os.chdir(self.path + '/packages/' + rpm)
+                 os.system('rpm --resign *.rpm')
+                 os.system('createrepo -d -s sha .')
+                 os.system('gpg2 --output repomd.xml.key --sign repodata/repomd.xml')
+                 os.system('gpg2 -a --detach-sign repodata/repomd.xml')
+                 scp.put(self.path + '/packages/' + rpm,
+                     remote_path = '/srv/ci-repos/' + self.target + '/yum/',
+                     recursive=True)
+                 os.chdir(currdir)
+            else:
+                 print('Skipping ' + rpm)
+        ssh.close()
+
+
+zzz = Repository()
+zzz.init_repo()
+zzz.create_repos()
+
