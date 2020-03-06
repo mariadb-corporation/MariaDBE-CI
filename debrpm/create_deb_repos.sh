@@ -24,8 +24,8 @@ if [ "${direct_in_path}" != "" ] ;
 then
   scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:${direct_in_path}/* $target/incoming/
 else
-  scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/$target/packages/debian*/RelWithDebInfo/* $target/incoming/
-  scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/$target/packages/ubuntu*/RelWithDebInfo/* $target/incoming/
+  scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/$target/packages/debian/*/* $target/incoming/
+  scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:/srv/ci-repos/$target/packages/ubuntu/*/* $target/incoming/
 fi
 find $target/incoming/ -name "*.ddeb" -exec rename 's/.ddeb$/.deb/' {} \;
 find $target/incoming/ -name "*.changes" -exec sed "s/\.ddeb/.deb/" -i {} \;

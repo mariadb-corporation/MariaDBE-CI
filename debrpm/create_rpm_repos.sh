@@ -31,23 +31,24 @@ if [ "${direct_in_path}" != "" ] ;
 then
   in_path=${direct_in_path}/$box
 else
-  in_path=/srv/ci-repos/${target}/packages/$box/RelWithDebInfo
+  in_path=/srv/ci-repos/${target}/packages/$box
 fi
 
 scp -r timofey_turenko_mariadb_com@mdbe-ci-repo:${in_path}/* ${target}/$box/
 
+curr=`pwd`
 cd ${target}/$box/
 rpm --resign *.rpm
 createrepo -d -s sha .
 gpg2 --output repomd.xml.key --sign repodata/repomd.xml
 gpg2 -a --detach-sign repodata/repomd.xml
-cd ../..
+cd $curr
 
 if [ "${direct_out_path}" != "" ] ;
 then
   out_path=${direct_out_path}/$box
 else
-  out_path=/srv/ci-repos/${target}/packages/$box/RelWithDebInfo
+  out_path=/srv/ci-repos/${target}/yum/$box
 fi
 ssh timofey_turenko_mariadb_com@mdbe-ci-repo "sudo rm -rf ${out_path}"
 ssh timofey_turenko_mariadb_com@mdbe-ci-repo "sudo mkdir -p ${out_path}; sudo chmod 777  ${out_path}"
