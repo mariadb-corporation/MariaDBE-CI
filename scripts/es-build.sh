@@ -4,7 +4,11 @@ set -x
 #
 cd $(dirname ${0})
 #
-CMAKE_DEFAULT_ARGS="-DBUILD_CONFIG=enterprise -DMYSQL_MAINTAINER_MODE=OFF"
+CMAKE_DEFAULT_ARGS=" -DMYSQL_MAINTAINER_MODE=OFF"
+if [ -f cmake/build_configurations/enterprise.cmake ] ; then
+  CMAKE_DEFAULT_ARGS+=" -DBUILD_CONFIG=enterprise"
+fi
+
 CMAKE_ARGS=${CMAKE_DEFAULT_ARGS}
 ASAN_ARGS="-DWITH_ASAN=ON"
 BUILD_TYPE=${BUILD_TYPE:-RelWithDebInfo}
