@@ -152,8 +152,10 @@ else
 #
   minor_version=`cat $(dirname ${0})/../VERSION | grep "MYSQL_VERSION_MINOR" | sed "s/MYSQL_VERSION_MINOR=//"`
 #  if [[ "${minor_version}" == "4" || "${minor_version}" == "5" ]]; then
-  if [ "${minor_version}" == "4" ] && [ "${PLATFORM}" != "centos-6" ] && [ "${PLATFORM}" != "rhel-6" ] ; then
-    CMAKE_ARGS+=" -DPLUGIN_COLUMNSTORE=YES"
+  if [ -d "$(dirname ${0})/../storage/columnstore"  ] ; then
+    if [ "${minor_version}" == "4" ] && [ "${PLATFORM}" != "centos-6" ] && [ "${PLATFORM}" != "rhel-6" ] ; then
+      CMAKE_ARGS+=" -DPLUGIN_COLUMNSTORE=YES"
+    fi
   fi
   cmake ${CMAKE_RUNDIR} ${CMAKE_ARGS}
   MAKE_SUDO="sudo"
