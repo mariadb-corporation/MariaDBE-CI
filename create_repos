@@ -171,17 +171,23 @@ class Repository():
         print('Call reprepro: export')
         os.system('reprepro -Vb ' + self.path + '/apt export')
         print('Copying repos back to server')
-        ssh.exec_command('sudo rm -rf ' + self.ci_repo +'/' + self.target + '/apt')
+        stdin, stdout, stderr = ssh.exec_command('sudo rm -rf ' + self.ci_repo +'/' + self.target + '/apt')
+        stdout.channel.recv_exit_status()
         #ssh.exec_command('sudo mkdir -p ' + self.ci_repo +'/' + self.target + '/apt')
-        ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+        stdin, stdout, stderr = ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+        stdout.channel.recv_exit_status()
         scp.put(self.path + '/apt',
                     remote_path = self.ci_repo +'/' + self.target,
                     recursive=True)
-        ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target + '/apt')
+        stdin, stdout, stderr = ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target + '/apt')
+        stdout.channel.recv_exit_status()
         currdir = os.getcwd()
-        ssh.exec_command('sudo rm -rf ' + self.ci_repo +'/' + self.target + '/yum')
-        ssh.exec_command('sudo mkdir -p ' + self.ci_repo +'/' + self.target + '/yum')
-        ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+        stdin, stdout, stderr = ssh.exec_command('sudo rm -rf ' + self.ci_repo +'/' + self.target + '/yum')
+        stdout.channel.recv_exit_status()
+        stdin, stdout, stderr = ssh.exec_command('sudo mkdir -p ' + self.ci_repo +'/' + self.target + '/yum')
+        stdout.channel.recv_exit_status()
+        stdin, stdout, stderr = ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+        stdout.channel.recv_exit_status()
         for rpm in RPMS:
             print('Create repo for ' + rpm)
             if os.path.isdir(self.path + '/' + self.rpm_path + '/' + rpm):
@@ -191,8 +197,10 @@ class Repository():
                  os.system('gpg2 --output repomd.xml.key --sign repodata/repomd.xml')
                  os.system('gpg2 -a --detach-sign repodata/repomd.xml')
                  print('Copying ' + rpm + ' back to server')
-                 ssh.exec_command('sudo mkdir -p ' + self.ci_repo +'/' + self.target + '/yum/' + os.path.dirname(rpm))
-                 ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+                 stdin, stdout, stderr = ssh.exec_command('sudo mkdir -p ' + self.ci_repo +'/' + self.target + '/yum/' + os.path.dirname(rpm))
+                 stdout.channel.recv_exit_status()
+                 stdin, stdout, stderr = ssh.exec_command('sudo chmod 777 -R ' + self.ci_repo +'/' + self.target)
+                 stdout.channel.recv_exit_status()
                  scp.put(self.path + '/' + self.rpm_path + '/' + rpm,
                      remote_path = self.ci_repo +'/' + self.target + '/yum/' + os.path.dirname(rpm),
                      recursive=True)
