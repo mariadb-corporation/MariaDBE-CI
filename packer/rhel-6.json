@@ -1,0 +1,42 @@
+{
+  "variables": {
+    "RHEL_PASSWD": ""
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "mariadb-enterprise-server",
+      "source_image_project_id": "rhel-cloud",
+      "source_image": "rhel-6-v20200309",
+      "zone": "us-central1-a",
+      "communicator": "ssh",
+      "disk_size": "60",
+      "image_name": "jw-rhel-6-{{timestamp}}",
+      "image_family": "jenkins-agent",
+      "ssh_username": "rhel"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo yum -y install subscription-manager",
+        "sudo subscription-manager register --auto-attach --force --username dbart@mariadb.com --password {{user `RHEL_PASSWD`}}",
+          "sudo subscription-manager repos --enable=rhel-6-server-optional-rpms", "sudo yum -y install wget tar gzip bzip2",
+          "sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm || true",
+          "sudo yum -y upgrade", "sudo yum -y groupinstall 'Development Tools'",
+          "sudo yum -y install git python-devel libffi-devel openssl-devel cracklib-devel",
+          "sudo yum -y install python-pip redhat-rpm-config curl bison libaio lsof perl-DBI",
+          "sudo yum -y install boost-program-options ncurses-devel wget perl-XML-Simple krb5-devel",
+          "sudo yum -y install perl-Time-HiRes perl-Test-HTTP-Server-Simple libcurl-devel mhash-devel sudo libxml2-devel libaio-devel scons snappy-devel",
+          "sudo yum -y install boost-devel check-devel which Judy-devel cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect net-tools",
+          "cd /etc/pki/rpm-gpg && sudo wget http://linuxsoft.cern.ch/cern/scl/RPM-GPG-KEY-cern",
+          "cd /etc/yum.repos.d && sudo wget http://linuxsoft.cern.ch/cern/scl/slc6-scl.repo",
+          "sudo yum -y install devtoolset-3-gcc-c++ devtoolset-3-valgrind-devel devtoolset-3-libasan-devel clang perl-CPAN perl-DBI perl-DBD-MySQL",
+          "sudo rm /etc/security/limits.d/90-nproc.conf", "sudo yum -y erase cmake || true",
+          "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+          "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+          "rm -f /tmp/cmake-3.15.3-Linux-x86_64.sh", "sudo yum -y install java-1.8.0-openjdk-headless",
+          "sudo /bin/bash -c 'export PERL_MM_USE_DEFAULT=1 && cpan Term::ANSIColor'"]
+    }
+  ]
+}

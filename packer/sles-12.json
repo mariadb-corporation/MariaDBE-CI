@@ -1,0 +1,40 @@
+{
+  "variables": {
+    "SLES_KEY": ""
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "mariadb-enterprise-server",
+      "source_image_project_id": "suse-cloud",
+      "source_image": "sles-12-sp5-v20200227",
+      "zone": "us-central1-a",
+      "communicator": "ssh",
+      "disk_size": "60",
+      "image_name": "jw-sles-12-{{timestamp}}",
+      "image_family": "jenkins-agent",
+      "ssh_username": "rhel"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
+          "until sudo SUSEConnect -p sle-module-legacy/12/x86_64; do sleep 1; done",
+          "until sudo SUSEConnect -p sle-sdk/12.5/x86_64; do sleep 1; done",
+          "until sudo SUSEConnect -p sle-module-toolchain/12/x86_64; do sleep 1; done",
+          "sudo zypper -n update", "sudo zypper -n install gcc-c++ libaio-devel pam-devel perl-XML-Simple",
+          "sudo zypper -n install libgnutls-devel bison openssl-devel systemd-devel perl-DBI perl-DBD-mysql",
+          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel",
+          "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build krb5-devel",
+          "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel",
+          "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel",
+          "sudo zypper -n install snappy-devel expect net-tools flex autoconf automake libtool",
+          "sudo zypper -n rm cmake || true",
+          "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+          "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+          "rm -f /tmp/cmake-3.15.3-Linux-x86_64.sh",
+          "sudo zypper -n install java-1_8_0-openjdk-headless"]
+    }
+  ]
+}

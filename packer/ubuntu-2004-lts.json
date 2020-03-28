@@ -1,0 +1,30 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "mariadb-enterprise-server",
+      "source_image": "ubuntu-focal-base",
+      "zone": "us-central1-a",
+      "communicator": "ssh",
+      "disk_size": "60",
+      "image_name": "jw-ubuntu-2004-{{timestamp}}",
+      "image_family": "jenkins-agent",
+      "ssh_username": "ubuntu"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update", "sudo mkdir -p /usr/share/man/man1",
+                    "sudo apt-get -y dist-upgrade", "sudo apt-get -y -f install", "sudo apt-get install -y default-jre-headless",
+                    "sudo apt-get -y install apt-utils build-essential python3-dev sudo git",
+                    "sudo apt-get -y install devscripts equivs libcurl4-openssl-dev python3 python3-pip curl libssl-dev libzstd-dev dh-exec",
+                    "sudo apt-get -y install libevent-dev dpatch gawk gdb libboost-dev libcrack2-dev libjudy-dev libnuma-dev libsnappy-dev libxml2-dev",
+                    "sudo apt-get -y install unixodbc-dev uuid-dev fakeroot iputils-ping dh-systemd libkrb5-dev libsystemd-dev libmhash-dev libxml-simple-perl",
+                    "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
+                    "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev",
+                    "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
+                    "sudo apt-get -y install chrpath debhelper bison cmake dh-apparmor libjemalloc-dev libncurses5-dev libpcre3-dev libreadline-gplv2-dev psmisc"]
+    }
+  ]
+}
