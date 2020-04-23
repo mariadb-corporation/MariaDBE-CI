@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+
+"""
+Add to .gnupg/gpg-agent.conf:
+
+    pinentry-program /usr/bin/pinentry-tty
+    allow-loopback-pinentry
+    default-cache-ttl 46000
+    allow-preset-passphrase
+
+and the reload gpg agent:
+
+    gpg-connect-agent reloadagent /bye
+"""
+
+"""
+ gpg2 --pinentry-mode loopback --import --allow-secret-key-import keys/mdbe.private
+"""
+
+from argparse import ArgumentParser
+import pathlib
+import sys
+import os
+import shutil
+import glob
+from pyutil import filereplace
+import subprocess
+import json
+
+
+PASSPHRASE = ''
+PATH = '.'
+
+# taget can be long, e.g. '10.2/origin/10.2e-abychko/264ee95dbc0de8cb07e70debbe693d36ca12148f'
+
+# for Jenkins --rpm '{"rhel-6":"rhel/6","rhel-7":"rhel/7","rhel-8":"rhel/8","sles-12":"sles/12", "sles-15":"sles/15"}'
+RPMS_dict = {
+        "rhel/6":"rhel/6",
+        "rhel/7":"rhel/7",
+        "rhel/8":"rhel/8",
+        "sles/12":"sles/12",
+        "sles/15":"sles/15",
+}
+
+# for Jenkins --deb '["debian-10", "debian-8", "debian-9", "ubuntu-1604", "ubuntu-1804", "ubuntu-2004"]'
+DEBS = [
+        'debian/jessie',
+        'debian/stretch',
+        'debian/buster',
+        'ubuntu/xenial',
+        'ubuntu/bionic',
+        'ubuntu/focal',
+]
+
+
+distributions = ['jessie', 'stretch', 'buster']
+distributions += ['xenial', 'bionic', 'focal']
+architectures = ['amd64', 'source']
+components = ['main', 'testing']
+origin = 'MariaDB Enterprise'
+description = 'Enterprise Server test repository'
+label = origin
+
+parser = ArgumentParser()
+parser.add_argument("--passphrase", dest="passphrase", help="Path to password phrase file", default="~/.config/passphrase")
+parser.add_argument("--keyname", dest="keyname", help="GPG key to sign with", default="MariaDB Platform QA")
+parser.add_argument("--target", dest="target", help="Path to packages in CI", default="10.4-enterprise")
+parser.add_argument("--ci-repo", dest="ci_repo", help="Path to CI repo root", default="/srv/repository/ci-repos")
+parser.add_argument("--rpm", dest="rpms", help="Names of dirs with RPMS (dictionary)", type=json.loads)
+parser.add_argument("--deb", dest="debs", help="Names of dirs with DEBS (list)", type=json.loads)
+parser.add_argument("--rpm-path", dest="rpm_path", help="Name of RPM directory inside of target", default = "packages")
+parser.add_argument("--deb-path", dest="deb_path", help="Name of DEB directory inside of target", default = "packages")
+parser.add_argument("--yum-path", dest="yum_path", help="Name of the directory to put yum repos", default = "yum")
+parser.add_argument("--apt-path", dest="apt_path", help="Name of the directory to put apt repos", default = "apt")
+
+arguments = parser.parse_args()
+
+f = open(os.path.expanduser(arguments.passphrase), 'r')
+PASSPHRASE = f.read().rstrip('\r\n')
+f.close()
+
+if arguments.debs:
+    DEBS = list(arguments.debs)
+if arguments.rpms:
+    RPMS_dict = dict(arguments.rpms)
+
+RPMS = list(RPMS_dict.keys())
+
+class Repository():
+    """Representing Deb Repository"""
+
+    def __init__(self):
+        self.path = arguments.ci_repo + '/' + arguments.target
+        self.target = arguments.target
+        self.rpm_path = self.path + '/' + arguments.rpm_path
+        self.deb_path = self.path + '/' + arguments.deb_path
+        self.yum_path = self.path + '/' + arguments.yum_path
+        self.apt_path = self.path + '/' + arguments.apt_path
+        shutil.rmtree(self.yum_path, ignore_errors=True)
+        shutil.rmtree(self.apt_path, ignore_errors=True)
+
+        process = subprocess.Popen([ 'gpg2', '--list-keys', arguments.keyname],
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        key_hash = stdout.decode("utf-8").splitlines()[1].strip()
+        print("Key key:" + key_hash)
+        process = subprocess.Popen([ 'gpg2', '--keyid-format', 'LONG', '--with-keygrip', '-K', key_hash],
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        l = stdout.decode("utf-8").splitlines()
+        self.gpgkey = ((l[0].split('/'))[1].split(' '))[0]
+        keygrip = l[next(x for x, val in enumerate(l) if val.find('Keygrip') > 0)].split('=',1)[1].strip()
+        print("Key grip: " + keygrip)
+        print("Key ID: " + self.gpgkey)
+        os.system('/usr/lib/gnupg2/gpg-preset-passphrase --preset --passphrase ' + PASSPHRASE + ' ' + keygrip)
+
+    def init_repo(self):
+        self.confdir = self.apt_path + '/' + 'conf'
+        self.incoming = self.apt_path + '/' + 'incoming'
+        pathlib.Path(self.confdir).mkdir(parents=True, exist_ok=True)
+        pathlib.Path(self.incoming).mkdir(parents=True, exist_ok=True)
+        dist_file = open(self.confdir + '/' + 'distributions', 'w')
+        for dist in distributions:
+            dist_file.write('Origin:' + ' ' + origin + '\n')
+            dist_file.write('Label:' + ' ' + label + '\n')
+            dist_file.write('Codename:' + ' ' + dist + '\n')
+            dist_file.write('Architectures:' + ' ' +
+                            ' '.join(map(str, architectures)) + '\n')
+            dist_file.write('Components:' + ' ' +
+                            ' '.join(map(str, components)) + '\n')
+            dist_file.write('Description:' + ' ' + description + '\n')
+            dist_file.write('SignWith:' + ' ' + self.gpgkey + '\n')
+            dist_file.write('\n')
+        dist_file.close()
+
+        upl_file = open(self.confdir + '/' + 'uploaders', 'w')
+        upl_file.write('allow * by unsigned\n')
+        upl_file.close()
+
+        inc_file = open(self.confdir + '/' + 'incoming', 'w')
+        inc_file.write('Name: default\n')
+        inc_file.write('IncomingDir: incoming\n')
+        inc_file.write('TempDir: tmp\n')
+        inc_file.write('Allow: ' + ' '.join(map(str, distributions)) + '\n')
+        inc_file.write('Cleanup: on_deny on_error\n')
+        inc_file.close()
+
+    def create_repos(self):
+        print('Moving DEB files to incoming')
+        for dis in DEBS:
+            files_list = glob.glob(self.deb_path + '/' + dis + '/*')
+            files_list = list(dict.fromkeys(files_list))
+            for file in files_list:
+                filename = os.path.basename(file)
+                pre, ext = os.path.splitext(filename)
+                if ext == '.ddeb':
+                    ext = '.deb'
+                if os.path.isfile(file):
+                    shutil.copyfile(file,  self.incoming + '/' + pre + ext)
+        print('Replacing ddeb')
+        for toreplace in ['changes', 'buildinfo']:
+            for file in glob.glob(self.incoming + '/*.' + toreplace):
+                print('replace ddeb in ' + file)
+                filereplace(file,"\.ddeb",".deb")
+        print('Call reprepro: processincommig')
+        os.system('reprepro -Vb ' + self.apt_path + ' processincoming default')
+        print('Call reprepro: export')
+        os.system('reprepro -Vb ' + self.apt_path + ' export')
+
+        os.system('sudo chmod 777 -R ' + self.apt_path +'/')
+
+        print("Create YUM repos")
+        currdir = os.getcwd()
+        for rpm in RPMS:
+            print('Create repo for ' + rpm)
+            print('Copying files')
+            if os.path.isdir(self.rpm_path + '/' + rpm):
+                files_list = glob.glob(self.rpm_path + '/' + rpm + '/*')
+                files_list = list(dict.fromkeys(files_list))
+                pathlib.Path(self.yum_path + '/' + RPMS_dict[rpm]).mkdir(parents=True, exist_ok=True)
+                for file in files_list:
+                    filename = os.path.basename(file)
+                    if os.path.isfile(file):
+                        shutil.copyfile(file,  self.yum_path + '/' + RPMS_dict[rpm] + '/' + filename)
+                os.chdir(self.yum_path + '/' + RPMS_dict[rpm])
+                print('Creating repo')
+                os.system('rpm --resign *.rpm')
+                os.system('createrepo -d -s sha .')
+                os.system('gpg2 --output repomd.xml.key --sign repodata/repomd.xml')
+                os.system('gpg2 -a --detach-sign repodata/repomd.xml')
+                os.system('sudo chmod 777 -R *')
+                os.chdir(currdir)
+            else:
+                 print('Skipping ' + rpm)
+        os.system('sudo chmod 777 -R ' + self.yum_path +'/')
+
+zzz = Repository()
+zzz.init_repo()
+zzz.create_repos()
