@@ -25,7 +25,7 @@
           "sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm || true",
           "sudo yum -y upgrade", "sudo yum -y groupinstall 'Development Tools'",
           "sudo yum -y install git python-devel libffi-devel openssl-devel cracklib-devel",
-          "sudo yum -y install python-pip redhat-rpm-config curl bison libaio lsof perl-DBI",
+          "sudo yum -y install python-pip redhat-rpm-config curl bison libaio lsof perl-DBI readline-devel",
           "sudo yum -y install boost-program-options ncurses-devel wget perl-XML-Simple krb5-devel",
           "sudo yum -y install perl-Time-HiRes perl-Test-HTTP-Server-Simple libcurl-devel mhash-devel sudo libxml2-devel libaio-devel scons snappy-devel",
           "sudo yum -y install boost-devel check-devel which Judy-devel cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect net-tools",
