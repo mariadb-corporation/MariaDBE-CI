@@ -25,7 +25,7 @@
           "sudo yum -y install wget tar gzip bzip2", "sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm || true",
           "sudo yum -y upgrade", "sudo yum -y groupinstall 'Development Tools'", "sudo yum -y install git python3-devel libffi-devel openssl-devel",
           "sudo yum -y install python3-pip redhat-rpm-config curl bison libaio lsof perl-DBI boost-program-options ncurses-devel wget perl-XML-Simple",
-          "sudo yum -y install perl-Time-HiRes libcurl-devel mhash-devel sudo libxml2-devel libaio-devel python3-scons readline-devel",
+          "sudo yum -y install perl-Time-HiRes libcurl-devel mhash-devel sudo libxml2-devel libaio-devel python3-scons readline-devel systemd-devel",
           "sudo yum -y install boost-devel check-devel which Judy cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect",
           "sudo yum -y install clang perl-CPAN jemalloc net-tools snappy-devel perl-Memoize perl-DBI perl-DBD-MySQL",
           "sudo rm /etc/security/limits.d/90-nproc.conf || true", "sudo yum -y erase cmake || true",

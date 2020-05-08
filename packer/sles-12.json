@@ -25,7 +25,7 @@
           "until sudo SUSEConnect -p sle-module-toolchain/12/x86_64; do sleep 1; done",
           "sudo zypper -n update", "sudo zypper -n install gcc-c++ libaio-devel pam-devel perl-XML-Simple",
           "sudo zypper -n install libgnutls-devel bison openssl-devel systemd-devel perl-DBI perl-DBD-mysql",
-          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel",
+          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel systemd-devel",
           "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build krb5-devel",
           "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel",
           "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel",

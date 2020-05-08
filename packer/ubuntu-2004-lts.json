@@ -3,7 +3,7 @@
     {
       "type": "googlecompute",
       "project_id": "mariadb-enterprise-server",
-      "source_image": "ubuntu-focal-base",
+      "source_image_family": "ubuntu-2004-lts",
       "zone": "us-central1-a",
       "communicator": "ssh",
       "disk_size": "60",
@@ -22,7 +22,7 @@
                     "sudo apt-get -y install libevent-dev dpatch gawk gdb libboost-dev libcrack2-dev libjudy-dev libnuma-dev libsnappy-dev libxml2-dev",
                     "sudo apt-get -y install unixodbc-dev uuid-dev fakeroot iputils-ping dh-systemd libkrb5-dev libsystemd-dev libmhash-dev libxml-simple-perl",
                     "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
-                    "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev",
+                    "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev libsystemd-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
                     "sudo apt-get -y install chrpath debhelper bison cmake dh-apparmor libjemalloc-dev libncurses5-dev libpcre3-dev libreadline-gplv2-dev psmisc"]
     }
