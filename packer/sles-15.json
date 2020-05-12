@@ -28,7 +28,7 @@
           "sudo zypper -n install checkpolicy policycoreutils curl perl perl-DBI perl-DBD-mysql",
           "sudo zypper -n install valgrind-devel sudo git scons perl-XML-Simple krb5-devel systemd-devel",
           "sudo zypper -n install libboost_program_options-devel systemd-devel cracklib-devel",
-          "sudo zypper -n install libboost_filesystem-devel libboost_system-devel check-devel",
+          "sudo zypper -n install libboost_filesystem-devel libboost_system-devel check-devel lsb-release",
           "sudo zypper -n install snappy-devel expect jemalloc net-tools flex libboost_*-devel autoconf automake libtool",
           "sudo zypper -n rm cmake || true",
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
