@@ -44,7 +44,6 @@ RPMS_dict = {
 
 # for Jenkins --deb '["debian-10", "debian-8", "debian-9", "ubuntu-1604", "ubuntu-1804", "ubuntu-2004"]'
 DEBS = [
-        'debian/jessie',
         'debian/stretch',
         'debian/buster',
         'ubuntu/xenial',
@@ -72,6 +71,7 @@ parser.add_argument("--rpm-path", dest="rpm_path", help="Name of RPM directory i
 parser.add_argument("--deb-path", dest="deb_path", help="Name of DEB directory inside of target", default = "packages")
 parser.add_argument("--yum-path", dest="yum_path", help="Name of the directory to put yum repos", default = "yum")
 parser.add_argument("--apt-path", dest="apt_path", help="Name of the directory to put apt repos", default = "apt")
+parser.add_argument("--product", dest="product", help="'MariaDBEnterprise' or 'MariaDB'", default ="")
 
 arguments = parser.parse_args()
 
@@ -90,7 +90,7 @@ class Repository():
     """Representing Deb Repository"""
 
     def __init__(self):
-        self.path = arguments.ci_repo + '/' + arguments.target
+        self.path = arguments.ci_repo + '/' + arguments.product + '/' arguments.target
         self.target = arguments.target
         self.rpm_path = self.path + '/' + arguments.rpm_path
         self.deb_path = self.path + '/' + arguments.deb_path
