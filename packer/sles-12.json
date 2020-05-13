@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "SLES_KEY": ""
-  },
   "builders": [
     {
       "type": "googlecompute",
@@ -12,14 +9,15 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-sles-12-{{timestamp}}",
-      "image_family": "jenkins-agent",
-      "ssh_username": "rhel"
+      "image_family": "jw-sles-12",
+      "ssh_username": "sles"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
+      "inline": ["until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
+          "until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-module-legacy/12/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-sdk/12.5/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-module-toolchain/12/x86_64; do sleep 1; done",

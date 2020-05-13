@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "SLES_KEY": ""
-  },
   "builders": [
     {
       "type": "googlecompute",
@@ -12,23 +9,24 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-sles-15-{{timestamp}}",
-      "image_family": "jenkins-agent",
-      "ssh_username": "rhel"
+      "image_family": "jw-sles-15",
+      "ssh_username": "sles"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["until sudo SUSEConnect -p PackageHub/15.1/x86_64; do sleep 10; done",
-          "sudo zypper -n update --auto-agree-with-licenses",
+      "inline": ["until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
+          "sudo SUSEConnect -p PackageHub/15.1/x86_64",
+          "until sudo zypper -n update --auto-agree-with-licenses; do sleep 5; done",
           "sudo zypper -n install gcc-c++ cmake libaio-devel pam-devel wget",
-          "sudo zypper -n install libgnutls-devel bison openssl-devel",
-          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel",
-          "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build autoconf automake",
+          "sudo zypper -n install libgnutls-devel bison openssl-devel lsb-release",
+          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel systemd-devel",
+          "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build",
           "sudo zypper -n install checkpolicy policycoreutils curl perl perl-DBI perl-DBD-mysql",
-          "sudo zypper -n install valgrind-devel sudo git scons perl-XML-Simple krb5-devel systemd-devel",
+          "sudo zypper -n install valgrind-devel sudo git scons perl-XML-Simple krb5-devel",
           "sudo zypper -n install libboost_program_options-devel systemd-devel cracklib-devel",
-          "sudo zypper -n install libboost_filesystem-devel libboost_system-devel check-devel lsb-release",
+          "sudo zypper -n install libboost_filesystem-devel libboost_system-devel check-devel",
           "sudo zypper -n install snappy-devel expect jemalloc net-tools flex libboost_*-devel autoconf automake libtool",
           "sudo zypper -n rm cmake || true",
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
