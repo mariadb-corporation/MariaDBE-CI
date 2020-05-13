@@ -24,7 +24,7 @@
           "sudo zypper -n install gcc-c++ cmake libaio-devel pam-devel wget",
           "sudo zypper -n install libgnutls-devel bison openssl-devel",
           "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel",
-          "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build",
+          "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build autoconf automake",
           "sudo zypper -n install checkpolicy policycoreutils curl perl perl-DBI perl-DBD-mysql",
           "sudo zypper -n install valgrind-devel sudo git scons perl-XML-Simple krb5-devel systemd-devel",
           "sudo zypper -n install libboost_program_options-devel systemd-devel cracklib-devel",
