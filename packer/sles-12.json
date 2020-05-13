@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "SLES_KEY": ""
-  },
   "builders": [
     {
       "type": "googlecompute",
@@ -12,23 +9,24 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-sles-12-{{timestamp}}",
-      "image_family": "jenkins-agent",
-      "ssh_username": "rhel"
+      "image_family": "jw-sles-12",
+      "ssh_username": "sles"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
+      "inline": ["until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
+          "until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-module-legacy/12/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-sdk/12.5/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-module-toolchain/12/x86_64; do sleep 1; done",
           "sudo zypper -n update", "sudo zypper -n install gcc-c++ libaio-devel pam-devel perl-XML-Simple",
           "sudo zypper -n install libgnutls-devel bison openssl-devel systemd-devel perl-DBI perl-DBD-mysql",
-          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel",
+          "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel systemd-devel",
           "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build krb5-devel",
           "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel",
-          "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel",
+          "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel lsb-release",
           "sudo zypper -n install snappy-devel expect net-tools flex autoconf automake libtool",
           "sudo zypper -n rm cmake || true",
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",

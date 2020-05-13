@@ -25,7 +25,7 @@
                     "sudo apt-get -y install unixodbc-dev uuid-dev fakeroot iputils-ping dh-systemd libkrb5-dev libsystemd-dev libmhash-dev libxml-simple-perl",
                     "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libdbi-perl libdbd-mysql-perl",
-                    "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool"]
+                    "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool libsystemd-dev"]
     }
   ]
 }
