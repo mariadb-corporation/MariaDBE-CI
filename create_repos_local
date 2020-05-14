@@ -90,7 +90,7 @@ class Repository():
     """Representing Deb Repository"""
 
     def __init__(self):
-        self.path = arguments.ci_repo + '/' + arguments.product + '/' arguments.target
+        self.path = arguments.ci_repo + '/' + arguments.product + '/' + arguments.target
         self.target = arguments.target
         self.rpm_path = self.path + '/' + arguments.rpm_path
         self.deb_path = self.path + '/' + arguments.deb_path
