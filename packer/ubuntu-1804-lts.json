@@ -17,8 +17,8 @@
     {
       "type": "shell",
       "inline": ["sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update",
-                    "sudo mkdir -p /usr/share/man/man1", 
-                    "sudo apt-get -y dist-upgrade", "sudo apt-get -y -f install", "sudo apt-get install -y default-jre-headless",
+                    "sudo mkdir -p /usr/share/man/man1",
+                    "sudo apt-get -y dist-upgrade", "sudo apt-get -y -f install", "sudo apt-get install -y default-jre-headless unixodbc-dev unixodbc",
                     "sudo apt-get -y build-dep mariadb-server", "sudo apt-get -y install apt-utils build-essential python-dev sudo git",
                     "sudo apt-get -y install devscripts equivs libcurl4-openssl-dev python3 python3-pip curl libssl-dev libzstd-dev dh-exec",
                     "sudo apt-get -y install libevent-dev dpatch gawk gdb libboost-dev libcrack2-dev libjudy-dev libnuma-dev libsnappy-dev libxml2-dev",

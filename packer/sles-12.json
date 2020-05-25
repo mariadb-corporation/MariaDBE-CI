@@ -25,7 +25,7 @@
           "sudo zypper -n install libgnutls-devel bison openssl-devel systemd-devel perl-DBI perl-DBD-mysql",
           "sudo zypper -n install ncurses-devel libxml2-devel libcurl-devel cracklib-devel systemd-devel",
           "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build krb5-devel",
-          "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel",
+          "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel unixODBC unixODBC-devel",
           "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel lsb-release",
           "sudo zypper -n install snappy-devel expect net-tools flex autoconf automake libtool",
           "sudo zypper -n rm cmake || true",
