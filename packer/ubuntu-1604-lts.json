@@ -9,7 +9,7 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-ubuntu-1604-{{timestamp}}",
-      "image_family": "jenkins-agent",
+      "image_family": "jw-ubuntu-1604",
       "ssh_username": "ubuntu"
     }
   ],
