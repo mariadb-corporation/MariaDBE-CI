@@ -16,7 +16,9 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
+      "inline": ["sudo rm -fv /etc/SUSEConnect", "sudo rm -fv /etc/zypp/{repos,services,credentials}.d/*",
+          "sudo rm -fv /usr/lib/zypp/plugins/services/*", "sudo sed -i '/^# Added by SMT reg/,+1d' /etc/hosts",
+          "until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
           "until sudo SUSEConnect -p PackageHub/12.5/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-module-legacy/12/x86_64; do sleep 1; done",
           "until sudo SUSEConnect -p sle-sdk/12.5/x86_64; do sleep 1; done",

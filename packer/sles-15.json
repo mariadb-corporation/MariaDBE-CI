@@ -16,7 +16,9 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
+      "inline": ["sudo rm -fv /etc/SUSEConnect", "sudo rm -fv /etc/zypp/{repos,services,credentials}.d/*",
+          "sudo rm -fv /usr/lib/zypp/plugins/services/*", "sudo sed -i '/^# Added by SMT reg/,+1d' /etc/hosts",
+          "until sudo /usr/sbin/registercloudguest --force-new; do sleep 10; done",
           "sudo SUSEConnect -p PackageHub/15.1/x86_64",
           "until sudo zypper -n update --auto-agree-with-licenses; do sleep 5; done",
           "sudo zypper -n install gcc-c++ cmake libaio-devel pam-devel wget",
