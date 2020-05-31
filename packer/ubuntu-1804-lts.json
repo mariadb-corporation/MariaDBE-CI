@@ -9,7 +9,7 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-ubuntu-1804-{{timestamp}}",
-      "image_family": "jenkins-agent",
+      "image_family": "jw-ubuntu-1804",
       "ssh_username": "ubuntu"
     }
   ],
@@ -26,7 +26,8 @@
                     "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev libsystemd-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
-                    "sudo apt-get -y -t bionic-backports install debhelper"]
+                    "sudo apt-get -y -t bionic-backports install debhelper",
+                    "sudo apt-get -y install libedit-dev liblz4-dev"]
     }
   ]
 }

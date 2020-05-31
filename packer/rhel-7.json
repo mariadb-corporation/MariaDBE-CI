@@ -12,7 +12,7 @@
       "communicator": "ssh",
       "disk_size": "60",
       "image_name": "jw-rhel-7-{{timestamp}}",
-      "image_family": "jenkins-agent",
+      "image_family": "jw-rhel-7",
       "ssh_username": "rhel"
     }
   ],
