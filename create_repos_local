@@ -14,6 +14,17 @@ and the reload gpg agent:
 """
 
 """
+Example
+./MariaDBE-CI/create_repos_local --ci-repo /home/turenko/repository-test/ --product Maxscale --no-incomming --target develop-new 
+
+copying:
+    max-tst-01:
+    scp -r timofey_turenko_mariadb_com@35.228.225.110:/srv/repository/Maxscale/$target . 
+    local:
+    scp -r vagrant@max-tst-01.mariadb.com:~/$target ~/repository-test/Maxscale/
+"""
+
+"""
  gpg2 --pinentry-mode loopback --import --allow-secret-key-import keys/mdbe.private
 """
 
@@ -43,17 +54,18 @@ RPMS_dict = {
 }
 
 # for Jenkins --deb '["debian-10", "debian-8", "debian-9", "ubuntu-1604", "ubuntu-1804", "ubuntu-2004"]'
-DEBS = [
-        'debian/stretch',
-        'debian/buster',
-        'ubuntu/xenial',
-        'ubuntu/bionic',
-        'ubuntu/focal',
-]
+DEBS_dict = {
+        'debian/stretch':'stretch',
+        'debian/buster':'buster',
+        'ubuntu/xenial':'xenial',
+        'ubuntu/bionic':'bionic',
+        'ubuntu/focal':'focal',
+}
+DEBS = list(DEBS_dict.keys())
 
-
-distributions = ['jessie', 'stretch', 'buster']
-distributions += ['xenial', 'bionic', 'focal']
+debians = ['stretch', 'buster']
+ubuntus = ['xenial', 'bionic', 'focal']
+distributions = debians + ubuntus
 architectures = ['amd64', 'source']
 components = ['main', 'testing']
 origin = 'MariaDB Enterprise'
@@ -66,12 +78,13 @@ parser.add_argument("--keyname", dest="keyname", help="GPG key to sign with", de
 parser.add_argument("--target", dest="target", help="Path to packages in CI", default="10.4-enterprise")
 parser.add_argument("--ci-repo", dest="ci_repo", help="Path to CI repo root", default="/srv/repository")
 parser.add_argument("--rpm", dest="rpms", help="Names of dirs with RPMS (dictionary)", type=json.loads)
-parser.add_argument("--deb", dest="debs", help="Names of dirs with DEBS (list)", type=json.loads)
+parser.add_argument("--deb", dest="debs", help="Names of dirs with DEBS (list) or dictironary in case if ", type=json.loads)
 parser.add_argument("--rpm-path", dest="rpm_path", help="Name of RPM directory inside of target", default = "packages")
 parser.add_argument("--deb-path", dest="deb_path", help="Name of DEB directory inside of target", default = "packages")
 parser.add_argument("--yum-path", dest="yum_path", help="Name of the directory to put yum repos", default = "yum")
 parser.add_argument("--apt-path", dest="apt_path", help="Name of the directory to put apt repos", default = "apt")
 parser.add_argument("--product", dest="product", help="'MariaDBEnterprise' or 'MariaDB'", default ="")
+parser.add_argument("--no-incomming", dest="no_incomming", help="Do not use 'incomming' and process deb packages one by one", action='store_true')
 
 arguments = parser.parse_args()
 
@@ -139,16 +152,20 @@ class Repository():
         upl_file.write('allow * by unsigned\n')
         upl_file.close()
 
-        inc_file = open(self.confdir + '/' + 'incoming', 'w')
-        inc_file.write('Name: default\n')
-        inc_file.write('IncomingDir: incoming\n')
-        inc_file.write('TempDir: tmp\n')
-        inc_file.write('Allow: ' + ' '.join(map(str, distributions)) + '\n')
-        inc_file.write('Cleanup: on_deny on_error\n')
-        inc_file.close()
+        if not arguments.no_incomming:
+            inc_file = open(self.confdir + '/' + 'incoming', 'w')
+            inc_file.write('Name: default\n')
+            inc_file.write('IncomingDir: incoming\n')
+            inc_file.write('TempDir: tmp\n')
+            inc_file.write('Allow: ' + ' '.join(map(str, distributions)) + '\n')
+            inc_file.write('Cleanup: on_deny on_error\n')
+            inc_file.close()
 
     def create_repos(self):
-        print('Moving DEB files to incoming')
+        if arguments.no_incomming:
+            print('Adding DEBs to the repository')
+        else:
+            print('Moving DEB files to incoming')
         for dis in DEBS:
             files_list = glob.glob(self.deb_path + '/' + dis + '/*')
             files_list = list(dict.fromkeys(files_list))
@@ -157,15 +174,21 @@ class Repository():
                 pre, ext = os.path.splitext(filename)
                 if ext == '.ddeb':
                     ext = '.deb'
-                if os.path.isfile(file):
-                    shutil.copyfile(file,  self.incoming + '/' + pre + ext)
-        print('Replacing ddeb')
-        for toreplace in ['changes', 'buildinfo']:
-            for file in glob.glob(self.incoming + '/*.' + toreplace):
-                print('replace ddeb in ' + file)
-                filereplace(file,"\.ddeb",".deb")
-        print('Call reprepro: processincommig')
-        os.system('reprepro -Vb ' + self.apt_path + ' processincoming default')
+                if os.path.isfile(file) and (ext == '.deb'):
+                    if arguments.no_incomming:
+                        print('reprepro -Vb ' + self.apt_path + ' includedeb ' + DEBS_dict[dis] + ' ' + file)
+                        os.system('reprepro --ignore=forbiddenchar -Vb ' + self.apt_path +
+                                  ' includedeb ' + DEBS_dict[dis] + ' ' + file)
+                    else:
+                        shutil.copyfile(file,  self.incoming + '/' + pre + ext)
+        if not arguments.no_incomming:
+            print('Replacing ddeb')
+            for toreplace in ['changes', 'buildinfo']:
+                for file in glob.glob(self.incoming + '/*.' + toreplace):
+                    print('replace ddeb in ' + file)
+                    filereplace(file,"\.ddeb",".deb")
+            print('Call reprepro: processincommig')
+            os.system('reprepro -Vb ' + self.apt_path + ' processincoming default')
         print('Call reprepro: export')
         os.system('reprepro -Vb ' + self.apt_path + ' export')
 
