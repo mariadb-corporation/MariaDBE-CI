@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
 """
+create user and add keys
+
+sudo adduser maxscale_ci
+sudo usermod -a -G google-sudoers maxscale_ci
+sudo su - maxscale_ci
+cd
+sudo chown maxscale_ci:maxscale_ci keys_maxscale/*
+gpg2 --import keys_maxscale/MariaDBManager-GPG-KEY.private
+
+"""
+
+"""
 Add to .gnupg/gpg-agent.conf:
 
     pinentry-program /usr/bin/pinentry-tty
@@ -12,6 +24,12 @@ and the reload gpg agent:
 
     gpg-connect-agent reloadagent /bye
 """
+
+"""
+add ssh keys, add passphrasefile ~/.config/passphrase
+"""
+
+
 
 """
 Example
