@@ -17,11 +17,6 @@ and the reload gpg agent:
 Example
 ./MariaDBE-CI/create_repos_local --ci-repo /home/turenko/repository-test/ --product Maxscale --no-incomming --target develop-new 
 
-copying:
-    max-tst-01:
-    scp -r timofey_turenko_mariadb_com@35.228.225.110:/srv/repository/Maxscale/$target . 
-    local:
-    scp -r vagrant@max-tst-01.mariadb.com:~/$target ~/repository-test/Maxscale/
 """
 
 """
@@ -73,24 +68,32 @@ description = 'Enterprise Server test repository'
 label = origin
 
 parser = ArgumentParser()
-parser.add_argument("--passphrase", dest="passphrase", help="Path to password phrase file", default="~/.config/passphrase")
+parser.add_argument("--passphrase-file", dest="passphrase_file",
+                    help="Path to password phrase file", default="~/.config/passphrase")
+parser.add_argument("--passphrase", dest="passphrase",
+                    help="passphrase as a plain text (if defined, --passphrase-file parameter is ignored")
 parser.add_argument("--keyname", dest="keyname", help="GPG key to sign with", default="MariaDB Platform QA")
 parser.add_argument("--target", dest="target", help="Path to packages in CI", default="10.4-enterprise")
 parser.add_argument("--ci-repo", dest="ci_repo", help="Path to CI repo root", default="/srv/repository")
 parser.add_argument("--rpm", dest="rpms", help="Names of dirs with RPMS (dictionary)", type=json.loads)
-parser.add_argument("--deb", dest="debs", help="Names of dirs with DEBS (list) or dictironary in case if ", type=json.loads)
+parser.add_argument("--deb", dest="debs", help="Names of dirs with DEBS (list) or dictironary in case if ",
+                    type=json.loads)
 parser.add_argument("--rpm-path", dest="rpm_path", help="Name of RPM directory inside of target", default = "packages")
 parser.add_argument("--deb-path", dest="deb_path", help="Name of DEB directory inside of target", default = "packages")
 parser.add_argument("--yum-path", dest="yum_path", help="Name of the directory to put yum repos", default = "yum")
 parser.add_argument("--apt-path", dest="apt_path", help="Name of the directory to put apt repos", default = "apt")
 parser.add_argument("--product", dest="product", help="'MariaDBEnterprise' or 'MariaDB'", default ="")
-parser.add_argument("--no-incomming", dest="no_incomming", help="Do not use 'incomming' and process deb packages one by one", action='store_true')
+parser.add_argument("--no-incomming", dest="no_incomming",
+                    help="Do not use 'incomming' and process deb packages one by one", action='store_true')
 
 arguments = parser.parse_args()
 
-f = open(os.path.expanduser(arguments.passphrase), 'r')
-PASSPHRASE = f.read().rstrip('\r\n')
-f.close()
+if arguments.passphrase:
+    PASSPHRASE = arguments.passphrase
+else:
+    f = open(os.path.expanduser(arguments.passphrase_file), 'r')
+    PASSPHRASE = f.read().rstrip('\r\n')
+    f.close()
 
 if arguments.debs:
     DEBS = list(arguments.debs)
