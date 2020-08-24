@@ -197,10 +197,11 @@ class Repository():
             for file in files_list:
                 filename = os.path.basename(file)
                 pre, ext = os.path.splitext(filename)
+                # TODO: check includedeb with ddeb
                 if ext == '.ddeb':
                     ext = '.deb'
-                if os.path.isfile(file) and (ext == '.deb'):
-                    if arguments.no_incomming:
+                if os.path.isfile(file):
+                    if arguments.no_incomming and (ext == '.deb'):
                         print('reprepro -Vb ' + self.apt_path + ' includedeb ' + DEBS_dict[dis] + ' ' + file)
                         os.system('reprepro --ignore=forbiddenchar -Vb ' + self.apt_path +
                                   ' includedeb ' + DEBS_dict[dis] + ' ' + file)
