@@ -16,7 +16,8 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update",
+      "inline": ["sleep 120",
+        "sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update",
         "sudo apt-get -y upgrade", "sudo apt-get -y build-dep mariadb-server", "sudo apt-get -y install apt-utils build-essential",
         "sudo apt-get -y install python-dev sudo git devscripts equivs libcurl4-openssl-dev python3 python3-pip curl libssl-dev",
         "sudo apt-get -y install libzstd-dev libevent-dev dpatch gawk gdb libboost-dev libcrack2-dev libjudy-dev libnuma-dev",
@@ -26,7 +27,8 @@
         "sudo apt-get -y install socat lsof sudo dh-systemd valgrind apt-transport-https dirmngr libdbi-perl libdbd-mysql-perl",
         "sudo apt-get -y install software-properties-common dirmngr rsync netcat libpcre2-dev openjdk-11-jre-headless",
         "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools pkg-config libsystemd-dev",
-        "sudo apt-get -y install libedit-dev liblz4-dev"]
+        "sudo apt-get -y install libedit-dev liblz4-dev",
+        "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]
 }

@@ -15,7 +15,8 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update", "sudo mkdir -p /usr/share/man/man1",
+      "inline": ["sleep 120",
+                    "sudo sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list", "sudo apt-get update", "sudo mkdir -p /usr/share/man/man1",
                     "sudo apt-get -y dist-upgrade", "sudo apt-get -y -f install", "sudo apt-get install -y default-jre-headless",
                     "sudo apt-get -y install apt-utils build-essential python3-dev sudo git unixodbc-dev unixodbc",
                     "sudo apt-get -y install devscripts equivs libcurl4-openssl-dev python3 python3-pip curl libssl-dev libzstd-dev dh-exec",
@@ -25,7 +26,8 @@
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev libsystemd-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
                     "sudo apt-get -y install chrpath debhelper bison cmake dh-apparmor libjemalloc-dev libncurses5-dev libpcre3-dev libreadline-gplv2-dev psmisc",
-                    "sudo apt-get -y install libedit-dev liblz4-dev"]
+                    "sudo apt-get -y install libedit-dev liblz4-dev",
+                    "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]
 }
