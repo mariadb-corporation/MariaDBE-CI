@@ -257,6 +257,8 @@ class Repository():
         os.system('ln -sv sles opensuse')
         os.system('ln -sv apt debian')
         os.system('ln -sv apt ubuntu')
+        os.chdir('yum')
+        os.system('ln -sv rhel centos')
         os.chdir(currdir)
 
 zzz = Repository()
