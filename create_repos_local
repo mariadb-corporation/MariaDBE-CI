@@ -206,9 +206,9 @@ class Repository():
                               flush=True)
                         if os.system('reprepro --ignore=forbiddenchar -Vb ' + self.apt_path +
                                   ' includedeb ' + DEBS_dict[dis] + ' ' + file) == 0:
-                            print('reprepro includeded succeded', flus=True)
+                            print('reprepro includeded succeded', flush=True)
                         else:
-                            print('reprepro includeded error', flus=True)
+                            print('reprepro includeded error', flush=True)
                     else:
                         shutil.copyfile(file,  self.incoming + '/' + pre + ext)
         if not arguments.no_incomming:
@@ -219,14 +219,14 @@ class Repository():
                     filereplace(file,"\.ddeb",".deb")
             print('Call reprepro: processincommig', flush=True)
             if os.system('reprepro -Vb ' + self.apt_path + ' processincoming default') == 0:
-                print('"reprepro processincoming" succeded', flus=True)
+                print('"reprepro processincoming" succeded', flush=True)
             else:
-                print('"reprepro processincoming" error', flus=True)
+                print('"reprepro processincoming" error', flush=True)
         print('Call reprepro: export', flush=True)
         if os.system('reprepro -Vb ' + self.apt_path + ' export') == 0:
-            print('"reprepro export" succeded', flus=True)
+            print('"reprepro export" succeded', flush=True)
         else:
-            print('"reprepro export" error', flus=True)
+            print('"reprepro export" error', flush=True)
         os.system('sudo chmod 777 -R ' + self.apt_path +'/')
 
         print("Create YUM repos", flush=True)
