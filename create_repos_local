@@ -268,15 +268,22 @@ class Repository():
         os.system('gpg2 --armor --export "' + arguments.keyname + '" > ' + self.path + "/" +
                   str(arguments.keyname).replace(" ", "-") + ".public")
         os.system('sudo chmod 777 -R ' + self.yum_path +'/')
-        os.chdir(self.yum_path + '/..')
-        os.system('ln -sv yum/rhel centos')
-        os.system('ln -sv yum/rhel rhel')
-        os.system('ln -sv yum/sles sles')
-        os.system('ln -sv sles opensuse')
-        os.system('ln -sv apt debian')
-        os.system('ln -sv apt ubuntu')
-        os.chdir('yum')
-        os.system('ln -sv rhel centos')
+        try:
+            os.chdir(self.yum_path + '/..')
+            os.system('ln -sv yum/rhel centos')
+            os.system('ln -sv yum/rhel rhel')
+            os.system('ln -sv yum/sles sles')
+            os.system('ln -sv sles opensuse')
+            os.system('ln -sv rhel centos')
+        except:
+            print("No any RPM", flush=True)
+        try:
+            os.chdir(self.apt_path + '/..')
+            os.system('ln -sv apt debian')
+            os.system('ln -sv apt ubuntu')
+        except:
+            print("No any DEB", flush=True)
+
         os.chdir(currdir)
 
 zzz = Repository()
