@@ -31,7 +31,7 @@
           "sudo yum -y install boost-devel check-devel which Judy-devel cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect net-tools",
           "cd /etc/pki/rpm-gpg && sudo wget http://linuxsoft.cern.ch/cern/scl/RPM-GPG-KEY-cern",
           "cd /etc/yum.repos.d && sudo wget http://linuxsoft.cern.ch/cern/scl/slc6-scl.repo",
-          "sudo yum -y install devtoolset-3-gcc-c++ devtoolset-3-valgrind-devel devtoolset-3-libasan-devel clang perl-CPAN perl-DBI perl-DBD-MySQL",
+          "sudo yum -y install devtoolset-3-gcc-c++ devtoolset-3-gdb devtoolset-3-valgrind-devel devtoolset-3-libasan-devel clang perl-CPAN perl-DBI perl-DBD-MySQL",
           "sudo rm /etc/security/limits.d/90-nproc.conf", "sudo yum -y erase cmake || true",
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
