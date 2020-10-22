@@ -265,6 +265,8 @@ class Repository():
                 os.chdir(currdir)
             else:
                 print('Skipping ' + rpm, flush=True)
+        os.system('rm' + self.path + "/" +
+                  str(arguments.keyname).replace(" ", "-") + "*.public")
         os.system('gpg2 --armor --export "' + arguments.keyname + '" > ' + self.path + "/" +
                   str(arguments.keyname).replace(" ", "-") + ".public")
         os.system('sudo chmod 777 -R ' + self.yum_path +'/')
