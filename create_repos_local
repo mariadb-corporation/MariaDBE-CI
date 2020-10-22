@@ -265,16 +265,20 @@ class Repository():
                 os.chdir(currdir)
             else:
                 print('Skipping ' + rpm, flush=True)
-        os.system('rm' + self.path + "/" +
+        os.system('rm ' + self.path + "/" +
                   str(arguments.keyname).replace(" ", "-") + "*.public")
         os.system('gpg2 --armor --export "' + arguments.keyname + '" > ' + self.path + "/" +
                   str(arguments.keyname).replace(" ", "-") + ".public")
         os.system('sudo chmod 777 -R ' + self.yum_path +'/')
         try:
             os.chdir(self.yum_path + '/..')
-            os.system('ln -sv yum/rhel centos')
-            os.system('ln -sv yum/rhel rhel')
-            os.system('ln -sv yum/sles sles')
+            if os.system('ln -sv yum/rhel centos') == 0:
+                os.system('ln -sv yum/rhel rhel')
+            else:
+                os.system('ln -sv yum/centos centos')
+                os.system('ln -sv yum/centos rhel')
+            if os.system('ln -sv yum/sles sles') != 0:
+                os.system('ln -sv yum/opensuse sles')
             os.system('ln -sv sles opensuse')
             os.system('ln -sv rhel centos')
         except:
