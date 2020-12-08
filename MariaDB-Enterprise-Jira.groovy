@@ -1,7 +1,7 @@
 //
 def failedTestsArray = []
 def jiraSite = 'MariaDB'
-def emailTo = 'platform-qa@mariadb.com, elenst@mariadb.com'
+def emailTo = 'platform-qa@mariadb.com, elenst@mariadb.com, serg@mariadb.com, roel.vandepaar@mariadb.com'
 def emailFrom = 'platform-qa@mariadb.com'
 def emailBody
 def emailSubj
@@ -53,7 +53,7 @@ pipeline {
     } //stage
     stage('Check Jira issues') {
       steps {
-        println "Checking issues against Jira..."
+        println "Checking the issues against Jira..."
         script {
           failedTestNumber = failedTestsArray.size()
           if ( failedTestNumber > 0) {
@@ -61,10 +61,11 @@ pipeline {
             emailBody = "Tested version: ${env.FULL_VERSION} from ${env.ES_GIT_BRANCH}<br/>"
             emailBody += "Git revision: ${env.ES_GIT_COMMIT}<br/>"
             emailBody += "MultiJob URL: ${env.METABUILD_URL}<br/>"
-            emailBody += "Aggregated test report: ${env.METABUILD_URL}testReport/<br/><br/>"
+            emailBody += "Aggregated test report: ${env.METABUILD_URL}testReport/<br/>"
+            emailBody += "Jira Site: https://jira.mariadb.org/<br/><br/>"
 
             emailBody += "The following <b>${failedTestNumber}</b> test failures were discovered during run:<br/><br/>"
-            failedTestsArray.each { failedTest ->
+            failedTestsArray.sort().each { failedTest ->
               emailBody += "<i>* ${failedTest}</i><br/>"
           // perform Jira search for failed test and report found issues
               def jiraQuery =  "(project = MDEV or project = MENT) and (status != Closed) AND summary ~ \"${failedTest}\""
