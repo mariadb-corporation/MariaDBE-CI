@@ -55,14 +55,15 @@ pipeline {
       steps {
         println "Checking issues against Jira..."
         script {
-          if (failedTestsArray.size() > 0) {
+          failedTestNumber = failedTestsArray.size()
+          if ( failedTestNumber > 0) {
             emailSubj = "Test result summary for ${env.ES_GIT_BRANCH} branch"
             emailBody = "Tested version: ${env.FULL_VERSION} from ${env.ES_GIT_BRANCH}<br/>"
             emailBody += "Git revision: ${env.ES_GIT_COMMIT}<br/>"
             emailBody += "MultiJob URL: ${env.METABUILD_URL}<br/>"
             emailBody += "Aggregated test report: ${env.METABUILD_URL}testReport/<br/><br/>"
 
-            emailBody += "The following test failures were discovered during run:<br/><br/>"
+            emailBody += "The following <b>${failedTestNumber}</b> test failures were discovered during run:<br/><br/>"
             failedTestsArray.each { failedTest ->
               emailBody += "<i>* ${failedTest}</i><br/>"
           // perform Jira search for failed test and report found issues
