@@ -200,6 +200,7 @@ class Repository():
                 # TODO: check includedeb with ddeb
                 if ext == '.ddeb':
                     ext = '.deb'
+                    os.rename(filename, pre + '.deb')
                 if os.path.isfile(file):
                     if arguments.no_incomming and (ext == '.deb'):
                         print('reprepro -Vb ' + self.apt_path + ' includedeb ' + DEBS_dict[dis] + ' ' + file,
