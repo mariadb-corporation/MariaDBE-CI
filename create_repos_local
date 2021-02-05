@@ -278,9 +278,7 @@ class Repository():
             else:
                 os.system('ln -sv yum/centos centos')
                 os.system('ln -sv yum/centos rhel')
-            if os.system('ln -sv yum/sles sles') != 0:
-                os.system('ln -sv yum/opensuse sles')
-            os.system('ln -sv sles opensuse')
+            os.system('ln -sv yum/sles sles')
             os.system('ln -sv rhel centos')
         except:
             print("No any RPM", flush=True)
