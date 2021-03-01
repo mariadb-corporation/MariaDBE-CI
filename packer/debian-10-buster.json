@@ -25,9 +25,9 @@
         "sudo apt-get -y install libmhash-dev libxml2-dev libxml-simple-perl gnutls-dev libaio-dev libpam-dev",
         "sudo apt-get -y install scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
         "sudo apt-get -y install socat lsof sudo dh-systemd valgrind apt-transport-https dirmngr libdbi-perl libdbd-mysql-perl",
-        "sudo apt-get -y install software-properties-common dirmngr rsync netcat libpcre2-dev openjdk-11-jre-headless",
+        "sudo apt-get -y install software-properties-common dirmngr rsync netcat libpcre2-dev default-jdk",
         "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools pkg-config libsystemd-dev",
-        "sudo apt-get -y install libedit-dev liblz4-dev",
+        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config",
         "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]

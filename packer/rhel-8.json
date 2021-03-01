@@ -7,7 +7,7 @@
       "type": "googlecompute",
       "project_id": "mariadb-enterprise-server",
       "source_image_project_id": "rhel-cloud",
-      "source_image": "rhel-8-v20210122",
+      "source_image_family": "rhel-8",
       "zone": "us-central1-a",
       "communicator": "ssh",
       "disk_size": "60",
@@ -30,7 +30,7 @@
           "sudo rm /etc/security/limits.d/90-nproc.conf || true", "sudo yum -y erase cmake || true",
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
-          "rm -f /tmp/cmake-3.15.3-Linux-x86_64.sh", "sudo yum -y install java-1.8.0-openjdk-headless"]
+          "rm -f /tmp/cmake-3.15.3-Linux-x86_64.sh", "sudo yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel"]
     }
   ]
 }
