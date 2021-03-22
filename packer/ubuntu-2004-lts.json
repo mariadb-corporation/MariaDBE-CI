@@ -26,7 +26,7 @@
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev libsystemd-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
                     "sudo apt-get -y install chrpath debhelper bison cmake dh-apparmor libjemalloc-dev libncurses5-dev libpcre3-dev libreadline-gplv2-dev psmisc",
-                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libarchive-dev",
+                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libarchive-dev libpmem-dev",
                     "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]
