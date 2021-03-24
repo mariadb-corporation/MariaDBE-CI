@@ -34,7 +34,7 @@
           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
           "rm -f /tmp/cmake-3.15.3-Linux-x86_64.sh",
-          "sudo zypper -n install java-1_8_0-openjdk java-1_8_0-openjdk-devel libpmem-devel"]
+          "sudo zypper -n install java-1_8_0-openjdk java-1_8_0-openjdk-devel libpmem-devel libsepol1"]
     }
   ]
 }
