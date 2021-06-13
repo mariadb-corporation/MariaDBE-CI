@@ -1,0 +1,95 @@
+zsh 1051  (git)-[ci-scripts]-% git show a49967883148d743f2344bf51f02e8493c80dad3
+commit a49967883148d743f2344bf51f02e8493c80dad3
+Author: Alexey Bychko <abychko@gmail.com>
+Date:   Thu Apr 1 21:24:27 2021 +0700
+
+    TODO-2859/TODO-2860 MariaDB ES with lz4 Support
+
+    added dev packages for already implemented compression algos.
+    installed lz4, snappy, bzip2, zstd, lzo
+
+diff --git a/packer/debian-10-buster.json b/packer/debian-10-buster.json
+index b414726..8d7c371 100644
+--- a/packer/debian-10-buster.json
++++ b/packer/debian-10-buster.json
+@@ -27,7 +27,7 @@
+         "sudo apt-get -y install socat lsof sudo dh-systemd valgrind apt-transport-https dirmngr libdbi-perl libdbd-mysql-perl",
+         "sudo apt-get -y install software-properties-common dirmngr rsync netcat libpcre2-dev default-jdk",
+         "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools pkg-config libsystemd-dev",
+-        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev",
++        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev liblz4-dev libbz2-dev libzstd-dev liblzo2-dev libsnappy-dev",
+         "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
+     }
+   ]
+diff --git a/packer/debian-9-stretch.json b/packer/debian-9-stretch.json
+index ae8d831..9c6f3e7 100644
+--- a/packer/debian-9-stretch.json
++++ b/packer/debian-9-stretch.json
+@@ -27,7 +27,7 @@
+         "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
+         "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libdbi-perl libdbd-mysql-perl",
+         "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool libsystemd-dev",
+-        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config",
++        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config liblz4-dev libbz2-dev libzstd-dev liblzo2-dev libsnappy-dev",
+         "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
+     }
+   ]
+diff --git a/packer/rhel-7.json b/packer/rhel-7.json
+index 7071bd7..859808d 100644
+--- a/packer/rhel-7.json
++++ b/packer/rhel-7.json
+@@ -27,6 +27,7 @@
+           "sudo yum -y install perl-Time-HiRes perl-Test-HTTP-Server-Simple libcurl-devel mhash-devel sudo libxml2-devel libaio-devel scons",
+           "sudo yum -y install boost-devel check-devel which Judy-devel cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect",
+           "sudo yum -y install clang perl-CPAN jemalloc net-tools snappy-devel perl-DBI perl-DBD-MySQL readline-devel systemd-devel",
++          "sudo yum -y install lz4-devel bzip2-devel libzstd-devel lzo-devel snappy-devel",
+           "sudo rm /etc/security/limits.d/90-nproc.conf || true", "sudo yum -y erase cmake || true",
+           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+diff --git a/packer/rhel-8.json b/packer/rhel-8.json
+index 503c0f9..b9d1098 100644
+--- a/packer/rhel-8.json
++++ b/packer/rhel-8.json
+@@ -27,6 +27,7 @@
+           "sudo yum -y install perl-Time-HiRes libcurl-devel mhash-devel sudo libxml2-devel libaio-devel python3-scons readline-devel systemd-devel",
+           "sudo yum -y install boost-devel check-devel which Judy cracklib-devel pam-devel rsync socat lsof valgrind redhat-lsb-core expect",
+           "sudo yum -y install clang perl-CPAN jemalloc net-tools snappy-devel perl-Memoize perl-DBI perl-DBD-MySQL",
++          "sudo yum -y install lz4-devel bzip2-devel libzstd-devel lzo-devel snappy-devel",
+           "sudo rm /etc/security/limits.d/90-nproc.conf || true", "sudo yum -y erase cmake || true",
+           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+diff --git a/packer/sles-12.json b/packer/sles-12.json
+index 3324098..868ead3 100644
+--- a/packer/sles-12.json
++++ b/packer/sles-12.json
+@@ -29,7 +29,8 @@
+           "sudo zypper -n install rsync socat lsof tar gzip bzip2 rpm-build krb5-devel gdb",
+           "sudo zypper -n install checkpolicy policycoreutils curl perl check-devel unixODBC unixODBC-devel",
+           "sudo zypper -n install valgrind-devel wget sudo git scons boost-devel lsb-release",
+-          "sudo zypper -n install snappy-devel expect net-tools flex autoconf automake libtool",
++          "sudo zypper -n install expect net-tools flex autoconf automake libtool",
++          "sudo zypper -n install snappy-devel liblz4-devel libzstd-devel libbz2-devel lzo-devel",
+           "sudo zypper -n rm cmake || true",
+           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+diff --git a/packer/sles-15.json b/packer/sles-15.json
+index 2f7bea3..65ce537 100644
+--- a/packer/sles-15.json
++++ b/packer/sles-15.json
+@@ -29,7 +29,8 @@
+           "sudo zypper -n install valgrind-devel sudo git scons perl-XML-Simple krb5-devel",
+           "sudo zypper -n install libboost_program_options-devel systemd-devel cracklib-devel",
+           "sudo zypper -n install libboost_filesystem-devel libboost_system-devel check-devel unixODBC unixODBC-devel",
+-          "sudo zypper -n install snappy-devel expect jemalloc net-tools flex libboost_*-devel autoconf automake libtool",
++          "sudo zypper -n install expect jemalloc net-tools flex libboost_*-devel autoconf automake libtool",
++          "sudo zypper -n install snappy-devel liblz4-devel libzstd-devel libbz2-devel lzo-devel",
+           "sudo zypper -n rm cmake || true",
+           "wget https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh -O /tmp/cmake-3.15.3-Linux-x86_64.sh",
+           "sudo /bin/bash /tmp/cmake-3.15.3-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license",
+diff --git a/packer/ubuntu-1604-lts.json b/packer/ubuntu-1604-lts.json
+index 63c791f..69ebf29 100644
+--- a/packer/ubuntu-1604-lts.json
++++ b/packer/ubuntu-1604-lts.json
+@@ -27,6 +27,7 @@
+                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync net
+[Sun 21/06/13 14:25 +07][s000][x86_64/darwin20.0/20.5.0][5.8]
