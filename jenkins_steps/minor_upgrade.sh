@@ -21,7 +21,7 @@
 # ESTOKEN
 # label - debian-10, rhel-7-arm etc.
 
-set -xe
+set -x
 
 ##############
 # Environment
@@ -160,6 +160,11 @@ EOF
 
 capabilities_query="select 'Stat' t, variable_name name, variable_value val from information_schema.global_status where variable_name like '%have%' union select 'Vars' t, variable_name name, variable_value val from information_schema.global_variables where variable_name like '%have%' order by t, name"
 
+trap_preparation_errors()
+{
+  trap 'echo "ERROR: Preliminary phase failed with code $? at line $LINENO, test is aborted" && exit 3' ERR
+}
+
 ##############
 # Main
 ##############
@@ -168,7 +173,8 @@ capabilities_query="select 'Stat' t, variable_name name, variable_value val from
 # a previous version, etc.) should not be considered real test failures.
 # The trap will set exit code to 3, which will be later interpreted as unstable.
 
-trap 'echo "Preliminary phase failed, test is aborted" && exit 3' EXIT
+set +e
+trap_preparation_errors
 
 # TODO:
 # This should be converted to an error when we find out which packages
@@ -186,12 +192,12 @@ retry "sudo ${repo_update_command}"
 
 # Workaround for MDEV-25930
 if [ "${PKG_TYPE}" == "RPM" ] ; then
-  set +e
+  trap - ERR
 fi
 sudo ${install_command} ${PKGS}
 # Workaround for MDEV-25930
 if [ "${PKG_TYPE}" == "RPM" ] ; then
-  set -e
+  trap_preparation_errors
 fi
 sudo systemctl restart mariadb
 
@@ -204,19 +210,12 @@ collect_dependencies "old"
 configure_test_repo
 
 # Now it's time to clear the trap, as the actual test begins here
-trap
+trap - ERR
+set -e
 
 # Installing the new server
 
-# Workaround for MDEV-25930
-if [ "${PKG_TYPE}" == "RPM" ] ; then
-  set +e
-fi
 sudo ${upgrade_command} ${PKGS}
-# Workaround for MDEV-25930
-if [ "${PKG_TYPE}" == "RPM" ] ; then
-  set -e
-fi
 sudo systemctl restart mariadb || journalctl -xe | tail -n 100 && systemctl status mariadb.service 
 
 echo 'SELECT VERSION()' | sudo ${client_command} | tee /tmp/version.new
