@@ -92,6 +92,11 @@ esac
 # TODO: Remove when MENT-1229 is fixed
 if [[ ${label} =~ rhel-8 ]] && [[ ${VERSION} =~ 10.2 ]] ; then sudo dnf -y erase mariadb-connector-c ; fi
 
+# TODO: Workaround for MDEV-25930 (below in the main part) is to be removed
+#       after 10.2.40 / 10.3.31 / 10.4.21 / 10.5.12 / 10.6.3 are released
+# TODO: Workaround for MENT-1229 (below in collect_dependencies) is to be removed
+#       after 10.2.40 / 10.3.31 / 10.4.21 / 10.5.12 / 10.6.3 are released
+
 #########################
 # Functions and commands
 #########################
@@ -123,7 +128,12 @@ collect_dependencies()
     done > ./ldd.$1
     for p in ${PKGS} ; do
       echo "$p:"
-      rpm -q -R $p | awk '{print $1}'
+      if [ "$p" == "MariaDB-common" ] && [[ ${label} =~ rhel-8 ]] && [ "${VERSION}" == "10.2" ] ; then
+        # Workaround for bugfix MENT-1229, normal execution is in "else"
+        rpm -q -R $p | grep -vE 'MariaDB-common|MariaDB-shared' | awk '{print $1}'
+      else
+        rpm -q -R $p | awk '{print $1}'
+      fi
       echo ""
     done > ./reqs.$1
   fi
