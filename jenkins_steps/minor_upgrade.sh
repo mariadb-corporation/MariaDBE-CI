@@ -94,8 +94,10 @@ if [[ ${label} =~ rhel-8 ]] && [[ ${VERSION} =~ 10.2 ]] ; then sudo dnf -y erase
 
 # TODO: Workaround for MDEV-25930 (below in the main part) is to be removed
 #       after 10.2.40 / 10.3.31 / 10.4.21 / 10.5.12 / 10.6.3 are released
-# TODO: Workaround for MENT-1229 (below in collect_dependencies) is to be removed
+# TODO: Workaround for MENT-1229 fix (below in collect_dependencies) is to be removed
 #       after 10.2.40 / 10.3.31 / 10.4.21 / 10.5.12 / 10.6.3 are released
+# TODO: Workaround for MENT-1163 (below in the main part) is to be removed
+#       after the bug is fixed, there should be no need to wait for the release
 
 #########################
 # Functions and commands
@@ -225,15 +227,36 @@ set -e
 
 # Installing the new server
 
-sudo ${upgrade_command} ${PKGS}
+res=0
+
+if [[ ${label} =~ sles-15 ]]; then
+# Workaround for MENT-1163 (SELinux errors upon installation on sles-15)
+  set +e
+fi
+
+sudo ${upgrade_command} ${PKGS} 2>&1 | tee ./install.log
+res=$?
+
+if [[ ${label} =~ sles-15 ]]; then
+# End of workaround for MENT-1163
+  if [ "$res" != "0" ] ; then
+    if grep "Failed to resolve typeattributeset statement" ./install.log ; then
+      echo "ERROR: MENT-1163 (SELinux error) was encountered upon installation" | tee -a ./errors
+    else
+      # It wasn't MENT-1163 but something else, abort the test
+      echo "ERROR: installation produced a non-zero exit code"
+      exit 1
+    fi
+  fi
+  set -e
+fi
+
 sudo systemctl restart mariadb || journalctl -xe | tail -n 100 && systemctl status mariadb.service 
 
 echo 'SELECT VERSION()' | sudo ${client_command} | tee /tmp/version.new
 sudo ${client_command} -e "${capabilities_query}" | tee ./capabilities.new
 collect_dependencies "new"
 
-# If we are still here, nothing has failed yet
-res=0
 set +x
 echo "Comparing old and new server version number..."
 if diff /tmp/version.old /tmp/version.new ; then
