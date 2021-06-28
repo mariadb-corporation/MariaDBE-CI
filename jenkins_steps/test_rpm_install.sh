@@ -47,22 +47,18 @@ if [[ ${label} =~ sles ]]; then
   sudo zypper rr Galera-Enterprise
   sudo zypper rr MariaDB-Enterprise
   #
-  sudo zypper ar -f -g https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/rpm/${label} Galera-Enterprise
-  sudo zypper ar -f ${REPOSITORY} MariaDB-Enterprise
-
   set +e
 
-  for _count in {0..20}; do
-    sleep ${_count}
-    #
-    sudo rm -fv /etc/SUSEConnect
-    sudo rm -fv /etc/zypp/{repos,services,credentials}.d/*
-    sudo rm -fv /usr/lib/zypp/plugins/services/*
-    sudo sed -i '/^# Added by SMT reg/,+1d' /etc/hosts
-    sudo SUSEConnect --cleanup
-    sudo registercloudguest --force-new
-    sudo zypper --no-gpg-checks refresh && break
-  done
+  sudo rm -fv /etc/SUSEConnect
+  sudo rm -fv /etc/zypp/{repos,services,credentials}.d/*
+  sudo rm -fv /usr/lib/zypp/plugins/services/*
+  sudo sed -i '/^# Added by SMT reg/,+1d' /etc/hosts
+  sudo SUSEConnect --cleanup
+
+  sudo zypper ar -f -g https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/rpm/${label} Galera-Enterprise
+  sudo zypper ar -f ${REPOSITORY} MariaDB-Enterprise
+  sudo zypper --no-gpg-checks refresh ||:
+
 fi
 #
 set -e
