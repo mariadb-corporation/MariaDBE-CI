@@ -112,8 +112,8 @@ if [[ ${label} =~ sles ]]; then
   sudo sed -i '/^# Added by SMT reg/,+1d' /etc/hosts
   sudo SUSEConnect --cleanup
 
-  sudo zypper ar -f -g https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/rpm/${label} Galera-Enterprise
-  sudo zypper ar -f ${REPOSITORY} MariaDB-Enterprise
+  sudo zypper ar -f -p 10 -g https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/rpm/${label} Galera-Enterprise
+  sudo zypper ar -f -p 10 ${REPOSITORY} MariaDB-Enterprise
   sudo zypper --no-gpg-checks refresh ||:
   sudo ${pkg_mng} --no-gpg-checks install MariaDB-server MariaDB-backup MariaDB-client
 fi
