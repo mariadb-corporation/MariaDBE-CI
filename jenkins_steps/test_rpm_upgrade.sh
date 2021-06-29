@@ -87,6 +87,11 @@ enable=1
 ${RHEL8FIX:-}
 EOF
 #
+  # Workaround for MENT-1229
+  # TODO: remove when 10.2.39-13 is released
+  if [[ ${label} =~ rhel-8 ]] && [[ ${PREVIOUS_VERSION} =~ 10.2 ]]; then
+    sudo ${pkg_mng} remove mariadb-connector-c
+  fi
   cat enterprise.repo
   sudo mv -vf enterprise.repo /etc/yum.repos.d/
   sudo yum -y clean all
