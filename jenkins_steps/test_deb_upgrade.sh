@@ -5,7 +5,7 @@
 # Need to install `bc` if missing
 for _count in {0..20}; do
   sleep ${_count}
-  sudo apt-get update && sudo apt-get -y install bc && break
+  sudo apt-get update && sudo apt-get -y install bc wget && break
 done
 
 # PREVIOUS_VERSION can be passed externally as ENV variable
@@ -87,7 +87,7 @@ sudo apt-get -y remove "galera-*"
 [[ -x /usr/bin/apt ]] && sudo apt list --installed | egrep -i "mariadb|galera" ||:
 #
 sudo rm -f /etc/apt/sources.list.d/mariadb.list
-echo "deb [trusted=yes] http://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/apt ${label}/" > enterprise-server.list
+echo "deb [trusted=yes] https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/galera-${GALERA_VERSION}/latest/apt ${label}/" > enterprise-server.list
 echo "deb [trusted=yes] ${REPOSITORY} ${label}/" >> enterprise-server.list
 cat enterprise-server.list
 sudo mv -vf enterprise-server.list /etc/apt/sources.list.d/
