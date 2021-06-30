@@ -26,7 +26,7 @@
                     "sudo apt-get -y install libaio-dev gnutls-dev libpam-dev scons libboost-program-options-dev libboost-system-dev libboost-filesystem-dev check",
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat dh-exec libpcre2-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
-                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-create-dbgsym pkg-config libarchive-dev",
+                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-create-dbgsym pkg-config libarchive-dev bc",
                     "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]

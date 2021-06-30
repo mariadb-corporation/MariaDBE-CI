@@ -29,7 +29,7 @@
                     "sudo apt-get -y install socat lsof valgrind apt-transport-https software-properties-common dirmngr rsync netcat libpcre2-dev libsystemd-dev",
                     "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc1 net-tools autoconf automake libtool libdbi-perl libdbd-mysql-perl",
                     "sudo apt-get -y -t bionic-backports install debhelper",
-                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev",
+                    "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev bc",
                     "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]

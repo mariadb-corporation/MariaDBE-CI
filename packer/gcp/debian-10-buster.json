@@ -27,7 +27,7 @@
         "sudo apt-get -y install socat lsof sudo dh-systemd valgrind apt-transport-https dirmngr libdbi-perl libdbd-mysql-perl",
         "sudo apt-get -y install software-properties-common dirmngr rsync netcat libpcre2-dev default-jdk",
         "sudo apt-get -y install libboost-all-dev libsnappy-dev flex expect libjemalloc2 net-tools pkg-config libsystemd-dev",
-        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev",
+        "sudo apt-get -y install libedit-dev liblz4-dev pkg-config libpmem-dev bc",
         "sudo sed -i 's|1|0|g' /etc/apt/apt.conf.d/20auto-upgrades"]
     }
   ]
