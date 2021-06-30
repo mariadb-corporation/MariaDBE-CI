@@ -27,5 +27,11 @@ fi
 [[ -f /opt/rh/devtoolset-3/enable ]] && source /opt/rh/devtoolset-3/enable
 #
 NCPU=$(grep -c processor /proc/cpuinfo)
-cmake . -DBUILD_CONFIG=enterprise
+
+# AUTHPROXY PLUGIN. see https://jira.mariadb.org/browse/MENT-1013
+#if [[ ${SHORT_VERSION} = "10.5" ]]; then
+#  CMAKEOPTS="-DPLUGIN_AUTH_PROXY=DYNAMIC"
+#fi
+#
+cmake . -DBUILD_CONFIG=enterprise ${CMAKEOPTS:-}
 make -j${NCPU} package

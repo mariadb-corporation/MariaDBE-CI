@@ -13,7 +13,13 @@ rm -vf mariadb-*.tar.gz
 #
 cd ${BUILDDIR}
 #
-debian/autobake-deb.sh
+# AUTHPROXY PLUGIN. see https://jira.mariadb.org/browse/MENT-1013
+# TODO add additional check for release tasks IF this script will be used for making releases
+#if [[ ${SHORT_VERSION} = "10.5" ]]; then
+#  AUTOBAKE_OPTS="--with-authproxy"
+#fi
+#
+debian/autobake-deb.sh ${AUTOBAKE_OPTS:-}
 #
 echo REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/DEB" >> ${WORKSPACE}/build.properties
 #
