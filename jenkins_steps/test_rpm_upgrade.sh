@@ -72,7 +72,9 @@ sudo mariabackup --prepare --target-dir=/var/tmp/backup/preupgrade_backup
 #
 sudo systemctl stop mariadb
 sudo ${pkg_mng} remove MariaDB-server MariaDB-client MariaDB-backup
-sudo rm -fv /etc/yum.repos.d/mariadb*.repo
+#
+REPO_FILE=$(find /etc -name 'mariadb.repo')
+sudo rm -fv ${REPO_FILE} ||:
 #
 
 if [[ ${label} =~ rhel ]]; then
