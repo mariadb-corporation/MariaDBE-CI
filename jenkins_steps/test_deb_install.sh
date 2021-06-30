@@ -37,6 +37,6 @@ if [[ ${label} =~ debian-9 ]]; then
 fi
 #
 for _try in {0..10}; do
-  sudo apt-get -y install ${PKGS} && break
   sleep 1
+  sudo apt-get -y install ${PKGS} && break
 done
