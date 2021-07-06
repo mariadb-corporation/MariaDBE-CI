@@ -29,12 +29,12 @@ echo mariadb-server-${SHORT_VERSION}  mariadb-server-${SHORT_VERSION}/postrm_rem
 echo mariadb-server-${SHORT_VERSION}  mysql-server/root_password  password ${MYSQL_PASSWORD}       | sudo debconf-set-selections
 echo mariadb-server-${SHORT_VERSION}  mysql-server/root_password_again  password ${MYSQL_PASSWORD} | sudo debconf-set-selections
 #
-if [[ ${label} = debian-9 ]] && [[ ${SHORT_VERSION} =~ 10.2 ]]; then
-  for _try in {0..10}; do
-    sudo apt-get -y install -t stretch-backports rocksdb-tools && break
-    sleep 1
-  done
-fi
+#if [[ ${label} = debian-9 ]] && [[ ${SHORT_VERSION} =~ 10.2 ]]; then
+#  for _try in {0..10}; do
+#    sudo apt-get -y install -t stretch-backports rocksdb-tools && break
+#    sleep 1
+#  done
+#fi
 #
 for _try in {0..10}; do
   sleep 1
