@@ -32,7 +32,7 @@ NCPU=$(grep -c processor /proc/cpuinfo)
 [[ -f /opt/rh/devtoolset-3/enable ]] && source /opt/rh/devtoolset-3/enable
 #
 cmake . -DBUILD_CONFIG=enterprise -DRPM=${label/-/}
-make -j${NCPU} package
+make -j${NCPU} package || exit 1
 #
 rm -fv ../MariaDB-shared-*.rpm
 mv -fv *.rpm ${WORKSPACE}

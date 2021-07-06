@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-set -x
+set -xe
 #
 # GIT_BRANCH and GIT_COMMIT are runtime variables
 echo "GIT_BRANCH=${GIT_BRANCH}" >  build.properties

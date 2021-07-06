@@ -19,7 +19,7 @@ cd ${BUILDDIR}
 #  AUTOBAKE_OPTS="--with-authproxy"
 #fi
 #
-debian/autobake-deb.sh ${AUTOBAKE_OPTS:-}
+debian/autobake-deb.sh ${AUTOBAKE_OPTS:-} || exit 1
 #
 echo REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/DEB" >> ${WORKSPACE}/build.properties
 #
