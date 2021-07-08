@@ -36,8 +36,14 @@ make -j${NCPU} package || exit 1
 #
 rm -fv ../MariaDB-shared-*.rpm
 mv -fv *.rpm ${WORKSPACE}
+# TODO fix the path if we need more locations
+if [[ ${JOB_NAME} = 10.[2-9]e-RPM-ENTERPRISE ]]; then
+  REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/ENTERPRISE/${GIT_BRANCH}/${GIT_COMMIT}/RPMS/${label}"
+else
+  REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/RPMS/${label}"
+fi
 #
-echo REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/RPMS/${label}" >> ${WORKSPACE}/build.properties
+echo REPOSITORY="${REPOSITORY}" >> ${WORKSPACE}/build.properties
 #
 cd ${WORKSPACE}
 #

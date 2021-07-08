@@ -21,7 +21,14 @@ cd ${BUILDDIR}
 #
 debian/autobake-deb.sh ${AUTOBAKE_OPTS:-} || exit 1
 #
-echo REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/DEB" >> ${WORKSPACE}/build.properties
+# TODO fix the path if we need more locations
+if [[ ${JOB_NAME} = 10.[2-9]e-DEB-ENTERPRISE ]]; then
+  REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/ENTERPRISE/${GIT_BRANCH}/${GIT_COMMIT}/DEB"
+else
+  REPOSITORY="https://${REPO_CRED}@es-repo.mariadb.net/jenkins/DEVBUILDS/${SHORT_VERSION}/${GIT_BRANCH}/${GIT_COMMIT}/DEB"
+fi
+#
+echo REPOSITORY="${REPOSITORY}" >> ${WORKSPACE}/build.properties
 #
 #
 cd ${WORKSPACE}
